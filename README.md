@@ -40,7 +40,19 @@ https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webp
         },
         methods: {
             changeColor(newVal) {
-                replacer.elementUI.changeColor(newVal, this.oldColor, 'css/theme-colors.css');
+                var options = {
+                    primary: { // primary color
+                        oldColor: this.oldColor,
+                        newColor: newVal,
+                    },
+                    cssUrl: 'css/theme-colors.css',
+                    others: { //custom colors
+                        oldColors: ['#0cdd3a', '#c655dd'],
+                        newColors: ['#ff0000', '#ffff00'],
+                    }
+                };
+                replacer.elementUI.changeColor(options);
+
                 this.oldColor = newVal
             }
         },

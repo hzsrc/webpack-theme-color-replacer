@@ -1,25 +1,25 @@
-﻿{
-  "name": "webpack-theme-color-replacer",
-  "version": "1.0.1",
-  "description": "A webpack plugin designed to dynamicly change the theme colors. 实现快速动态替换主题色的webpack插件. ",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"No test speci   fied\" && exit 1"
-  },
-  "dependencies": {
-  },
-  "keywords": [
-    "webpack",
-    "javascript",
-    "ifdebug",
-    "conditional",
-    "compile"
-  ],
-  "author": {
-    "name": "James.Huang",
-    "email": "hz932@qq.com",
-    "url": "http://www.hz300.com/webpack-theme-color-replacer/"
-  },
-  "license": "MIT",
-  "readme": "readme.md"
+{
+    "name": "webpack-theme-color-replacer",
+    "version": "1.0.2",
+    "description": "A webpack plugin designed to dynamicly change the theme colors. 实现快速动态替换主题色的webpack插件. ",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"No test speci   fied\" && exit 1"
+    },
+    "dependencies": {
+    },
+    "keywords": [
+        "webpack",
+        "javascript",
+        "ifdebug",
+        "conditional",
+        "compile"
+    ],
+    "author": {
+        "name": "James.Huang",
+        "email": "hz932@qq.com",
+        "url": "http://www.hz300.com/webpack-theme-color-replacer/"
+    },
+    "license": "MIT",
+    "readme": "readme.md"
 }

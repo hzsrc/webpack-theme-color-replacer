@@ -2,25 +2,22 @@ var varyColor = require('./varyColor')
 var idMap = {}
 
 module.exports = {
-    changeColor(newColor, oldColor, varyColorFunc, cssUrl) { //varyColorFunc: color => colorArray
+    changeColor(newColors, oldColors, cssUrl) { //varyColorFunc: color => colorArray
         var _this = this;
-        if (typeof newColor === 'string') {
-            getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
+        getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
 
-            // var links = [].filter.call(document.querySelectorAll('link'), function (e) {
-            //     //根据pages下的所有页面列举css
-            //     return /(main|index)\..+\.css/.test(e.href || '')
-            // });
-            // if (links[0]) {
-            //     getCssText(links[0].href, _this.themeColor, setCssTo)
-            // }
-            // _this.themeColor = newColor
-        }
+        // var links = [].filter.call(document.querySelectorAll('link'), function (e) {
+        //     //根据pages下的所有页面列举css
+        //     return /(main|index)\..+\.css/.test(e.href || '')
+        // });
+        // if (links[0]) {
+        //     getCssText(links[0].href, _this.themeColor, setCssTo)
+        // }
 
         function getCssText(url, setCssTo) {
             var elStyle = idMap[url] && document.getElementById(idMap[url]);
             if (elStyle) {
-                oldColor = elStyle.color
+                oldColors = elStyle.color.split('|')
                 setCssTo(elStyle, elStyle.innerText)
             }
             else {
@@ -34,15 +31,14 @@ module.exports = {
         }
 
         function setCssTo(elStyle, cssText) {
-            var newColors = varyColorFunc(newColor.replace('#', ''))
-            var oldColors = varyColorFunc(oldColor.replace('#', ''))
             cssText = _this.replaceCssText(cssText, oldColors, newColors)
-            elStyle.color = newColor
+            elStyle.color = newColors.join('|')
             elStyle.innerText = cssText
         }
     },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (e, t) {
+            e = e.replace(',', ',\\s*') // 255, 255,3
             cssText = cssText.replace(new RegExp(e, 'ig'), newColors[t])
         })
         return cssText
