@@ -1,9 +1,53 @@
-This plugin can extract theme colors from all the outputed css files (sucn as element-ui theme colors), and make a 'theme-colors.css' file. At runtime, it will download this file and replace the colors into customize colors by a color map.
+This plugin can extract theme color styles from all the outputed css files (sucn as element-ui theme colors), and make a 'theme-colors.css' file which only contains color styles. At runtime in your web page, the client part will help you to download this css file, and then replace the colors into new customized colors dynamicly.
 
-# 1.install
+# 1.Install
 npm i -D webpack-theme-color-replacer
 
-# 2.cofig
-````js
-asd
+# 2.Cofig for webpack
 
+````js
+
+const ThemeColorReplacer = require('webpack-theme-color-replacer')
+
+module.exports = {
+    .....
+    plugins: [
+        new ThemeColorReplacer({
+            fileName: 'css/theme-colors.css',
+            matchColors: [
+                ...ThemeColorReplacer.getElementUISeries('#f67a17'), // primary color of element-ui
+                '#0cdd3a',  //other custom color
+            ],
+        })
+    ],
+}
+````
+
+You can view this sample:  
+https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webpack.base.conf.js
+
+# 3.Usage in your web page
+````js
+
+    import replacer from 'webpack-theme-color-replacer/client';
+
+    export default {
+        data() {
+            return {
+                mainColor: '#f67a17',
+                oldColor: '#f67a17',
+            };
+        },
+        methods: {
+            changeColor(newVal) {
+                replacer.elementUI.changeColor(newVal, this.oldColor, 'css/theme-colors.css');
+                this.oldColor = newVal
+            }
+        },
+    }
+
+
+````
+
+You can view this sample:  
+https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/modules/themeColor/changeColor.vue
