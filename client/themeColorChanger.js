@@ -1,4 +1,4 @@
-var varyColor = require('./varyColor')
+﻿var varyColor = require('./varyColor')
 var idMap = {}
 
 module.exports = {
@@ -38,7 +38,6 @@ module.exports = {
     },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (e, t) {
-            e = e.replace(',', ',\\s*') // 255, 255,3
             cssText = cssText.replace(new RegExp(e, 'ig'), newColors[t])
         })
         return cssText
