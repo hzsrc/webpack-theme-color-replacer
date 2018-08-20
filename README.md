@@ -13,7 +13,7 @@ module.exports = {
     .....
     plugins: [
         new ThemeColorReplacer({
-            fileName: 'css/theme-colors.css',
+            fileName: 'css/theme-colors.css', // output css file name
             matchColors: [
                 ...ThemeColorReplacer.getElementUISeries('#f67a17'), // primary color of element-ui
                 '#0cdd3a',  //other custom color
