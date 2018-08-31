@@ -3,6 +3,9 @@ This plugin can extract theme color styles from all the outputed css files (sucn
 This is a sample: 
 http://test.hz300.com/webpack4/themeColor.html
 
+Implementation (Chinese):
+https://segmentfault.com/a/1190000016061608
+
 # 1.Install
 npm i -D webpack-theme-color-replacer
 
