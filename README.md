@@ -1,4 +1,4 @@
-This plugin can extract theme color styles from all the outputed css files (sucn as element-ui theme colors), and make a 'theme-colors.css' file which only contains color styles. At runtime in your web page, the client part will help you to download this css file, and then replace the colors into new customized colors dynamicly.  
+This plugin can extract theme color styles from all the outputed css files (such as element-ui theme colors), and make a 'theme-colors.css' file which only contains color styles. At runtime in your web page, the client part will help you to download this css file, and then replace the colors into new customized colors dynamicly.  
 
 This is a sample: 
 http://test.hz300.com/webpack4/themeColor.html
