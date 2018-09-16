@@ -11,7 +11,7 @@ module.exports = {
     /*
     options = {
         primary: {
-            oldColor: '#f67a17',
+            oldColor: '#409EFF',
             newColor: '#ff00ff',
         },
         cssUrl: 'css/theme-colors.css',

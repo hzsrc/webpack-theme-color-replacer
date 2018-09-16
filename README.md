@@ -21,7 +21,7 @@ module.exports = {
         new ThemeColorReplacer({
             fileName: 'css/theme-colors.css', // output css file name
             matchColors: [
-                ...ThemeColorReplacer.getElementUISeries('#f67a17'), // primary color of element-ui
+                ...ThemeColorReplacer.getElementUISeries('#409EFF'), // primary color of element-ui
                 '#0cdd3a',  //other custom color
             ],
         })
@@ -40,8 +40,8 @@ https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webp
     export default {
         data() {
             return {
-                mainColor: '#f67a17',
-                oldColor: '#f67a17',
+                mainColor: '#409EFF', 
+                oldColor: '#409EFF',  // primary color of element-ui
             };
         },
         methods: {
