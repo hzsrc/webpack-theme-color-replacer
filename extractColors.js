@@ -2,7 +2,7 @@ module.exports = function Extractor(options) {
     var matchColors = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
         .map(c => new RegExp(c.replace(/,/g, ',\\s*'), 'i')); // 255, 255,3
 
-    this.extractColors = function (src) {
+    this.extractColors = function(src) {
         var ret = []
         var nameStart, nameEnd, cssEnd = -1;
         while (true) {
@@ -14,7 +14,8 @@ module.exports = function Extractor(options) {
                 var rules = this.getRules(cssCode)
                 if (rules.length) {
                     var name = src.slice(nameStart, nameEnd)
-                    ret.push(name + '{' + rules.join(';') + '}')
+                    var prefix = options.cssPrefix ? 'body ' : ''
+                    ret.push(prefix + name + '{' + rules.join(';') + '}')
                 }
             }
             else {
@@ -23,7 +24,7 @@ module.exports = function Extractor(options) {
         }
         return ret.join('\n')
     }
-    this.getRules = function (cssCode) {
+    this.getRules = function(cssCode) {
         var rules = cssCode.split(';')
         var ret = []
         rules.forEach(rule => {
