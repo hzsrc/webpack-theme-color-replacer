@@ -1,4 +1,5 @@
 module.exports = {
+  // 淡化
   lighten: function (colorStr, rate) {
     var nums = this.toNum3(colorStr);
     var r = nums[0], g = nums[1], b = nums[2];
