@@ -14,6 +14,7 @@ module.exports = function Extractor(options) {
                 var rules = this.getRules(cssCode)
                 if (rules.length) {
                     var name = src.slice(nameStart, nameEnd)
+                    name = name.replace('}', '') // keyframes may left a '}' prefix here
                     var prefix = options.cssPrefix ? 'body ' : '' // 加css名前缀，提升优先级
                     ret.push(prefix + name + '{' + rules.join(';') + '}')
                 }
