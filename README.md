@@ -24,7 +24,10 @@ module.exports = {
                 ...ThemeColorReplacer.getElementUISeries('#409EFF'), // primary color of element-ui
                 '#0cdd3a',  //other custom color
             ],
-            cssPrefix: true  // add a prefix to each class name. This can raise css priority.
+            cssPrefix: true,  // add a 'body ' prefix to each class name. This can raise css priority.
+            resolveCss(resultCss) {
+                return resultCss.replace(/#4b0/g, '#ed4040') // resolve result css code
+            }
         })
     ],
 }
