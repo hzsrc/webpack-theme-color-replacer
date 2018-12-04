@@ -26,8 +26,13 @@
 // }
 
 // emit钩子的代码处理
-var CssCodeReg = /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g; // from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 module.exports = function extractAssets(assets, extractor) {
+  var isDebug = process.env.NODE_ENV == 'development';
+  var CssCodeReg = isDebug
+    ? /\\nexports\.push\(\[module\.i, \\"(.+?\})\\\\n\\", \\"\\"\]\)/g  // \n// imports\n\n\n// module\nexports.push([module.i, \"\\n.party-fee-list{   ...... }\\n\", \"\"]);
+    : /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g; // from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
+
+
   var cssSrcs = [];
   Object.keys(assets).map(fn => {
     if (fn.match(/\.css/i)) {
@@ -37,7 +42,7 @@ module.exports = function extractAssets(assets, extractor) {
     else if (fn.match(/\.js/i)) {
       var src = assets[fn].source()
       src.replace(CssCodeReg, (match, $1) => {
-        var src = $1.replace(/\\n/g, '');
+        var src = $1.replace(/\\\\?n/g, '');
         [].push.apply(cssSrcs, extractor.extractColors(src))
       })
     }
