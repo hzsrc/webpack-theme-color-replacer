@@ -23,5 +23,4 @@ module.exports = function extractAssets(assets, extractor) {
     }
   });
   return cssSrcs
-    .filter(srcCss => srcCss)
 }
