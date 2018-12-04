@@ -21,19 +21,23 @@ class ThemeColorReplacer {
   }
 
   apply(compiler) {
-    var srcArray = [];
 
-    this.getBinder(compiler, 'compilation')((compilation) => {
-      this.getBinder(compilation, 'optimize-chunk-assets')((chunks, callback) => {
-        [].push.apply(srcArray, extractAssets(compilation.assets, this.extractor))
-        callback()
-      })
-    });
+    // this.getBinder(compiler, 'compilation')((compilation) => {
+    //   this.getBinder(compilation, 'optimize-chunk-assets')((chunks, callback) => {
+    //     [].push.apply(srcArray, extractAssets(compilation.assets, this.extractor))
+    //     callback()
+    //   })
+    // });
 
     this.getBinder(compiler, 'emit')((compilation, callback) => {
-      var output = srcArray.filter(srcCss => srcCss).join('\n')
+      var srcArray = extractAssets(compilation.assets, this.extractor);
+      var output = dropDuplicate(srcArray).join('\n');
 
-      console.log('Extracted theme color css content length: ' + output.length)
+      if (this.options.resolveCss) { // 自定义后续处理
+        output = this.options.resolveCss(output)
+      }
+
+      console.log('Extracted theme color css content length: ' + output.length);
 
       //Add to assets for output
       compilation.assets[this.options.fileName] = {
@@ -41,9 +45,21 @@ class ThemeColorReplacer {
         size: () => output.length
       };
 
-      callback()
-    })
+      callback();
+    });
   }
+}
+
+function dropDuplicate(arr) {
+  var map = {}
+  var r = []
+  for (var s of arr) {
+    if (!map[s]) {
+      r.push(s)
+      map[s] = 1
+    }
+  }
+  return r
 }
 
 ThemeColorReplacer.getElementUISeries = require('./forElementUI/getElementUISeries.js');

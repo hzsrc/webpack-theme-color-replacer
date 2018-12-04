@@ -2,7 +2,7 @@ module.exports = function Extractor(options) {
   var matchColors = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
     .map(c => new RegExp(c.replace(/,/g, ',\\s*'), 'i')); // 255, 255,3
 
-  var lineReg = /[\r\n]+/g;
+  var lineReg = /\s+/g;
   var rightReg = /\}/g;
   var multiReg = /(^|,\s*)/g
   this.extractColors = function(src) {
@@ -36,7 +36,7 @@ module.exports = function Extractor(options) {
         break;
       }
     }
-    return ret.join('\n')
+    return ret
   }
   this.getRules = function(cssCode) {
     var rules = cssCode.split(';')
