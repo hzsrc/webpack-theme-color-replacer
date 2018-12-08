@@ -24,12 +24,13 @@
 //   });
 //   return cssSrcs
 // }
-
 // emit钩子的代码处理
 module.exports = function extractAssets(assets, extractor) {
   var isDebug = process.env.NODE_ENV == 'development';
   var CssCodeReg = isDebug
-    ? /\\nexports\.push\(\[module\.i, \\"(.+?\})(?:\\\\n)?\\", \\"\\"\]\)/g  // \n// imports\n\n\n// module\nexports.push([module.i, \"\\n.party-fee-list{   ...... }\\n\", \"\"]);
+      //css-loader 2: \n// Module\nexports.push([module.i, \"a{   ...... }\\n\", \"\",{\"version\":3,
+      //css-loader 1: \n// module\nexports.push([module.i, \"a{   ...... }\\n\", \"\"]);
+      ? /\\nexports\.push\(\[module\.i, \\"(.+?\})(?:\\\\n)?\\", \\"\\"(\]\)|,\{)/g
     : /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g; // from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 
 
