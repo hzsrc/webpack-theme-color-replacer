@@ -2,7 +2,7 @@
 var idMap = {}
 
 module.exports = {
-    changeColor(options) { //varyColorFunc: color => colorArray
+    changeColor: function(options) { //varyColorFunc: color => colorArray
         var oldColors = options.oldColors, newColors = options.newColors, cssUrl = options.cssUrl;
         var _this = this;
         getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
