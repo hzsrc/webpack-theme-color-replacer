@@ -25,7 +25,7 @@ module.exports = {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
-                _this.getCSSString(url, cssText => {
+                _this.getCSSString(url, function(cssText) {
                     setCssTo(elStyle, cssText)
                 })
             }

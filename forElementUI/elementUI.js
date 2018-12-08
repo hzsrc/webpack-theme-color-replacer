@@ -7,7 +7,7 @@ var elementUI = {
 };
 
 module.exports = {
-  changeColor(options) {
+  changeColor: function(options) {
     /*
     options = {
         primary: {
@@ -43,5 +43,5 @@ module.exports = {
     var opt = { oldColors: oldColors, newColors: newColors, cssUrl: options.cssUrl }
     changer.changeColor(opt)
   },
-  getElementUISeries,
+  getElementUISeries: getElementUISeries,
 }

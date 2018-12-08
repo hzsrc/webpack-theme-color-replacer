@@ -1,9 +1,9 @@
 module.exports = {
 // 淡化
-    lighten,
-    toNum3,
-    rgba,
-    pad2
+    lighten: lighten,
+    toNum3: toNum3,
+    rgba: rgba,
+    pad2: pad2
 }
 
 function pad2(num) {
