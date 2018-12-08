@@ -38,8 +38,8 @@ module.exports = {
         }
     },
     replaceCssText: function (cssText, oldColors, newColors) {
-        oldColors.forEach(function (e, t) {
-            cssText = cssText.replace(new RegExp(e, 'ig'), newColors[t])
+        oldColors.forEach(function (color, t) {
+            cssText = cssText.replace(new RegExp(color.replace(/,/g, ',\\s*'), 'ig'), newColors[t]) // 255, 255,3
         })
         return cssText
     },
