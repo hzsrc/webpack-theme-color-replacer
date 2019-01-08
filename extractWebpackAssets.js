@@ -26,7 +26,7 @@
 // }
 // emit钩子的代码处理
 
-var Reg_Lf_Rem = /\\\\?n|\/\*[\s\S]+\*\//g; // \n和备注
+var Reg_Lf_Rem = /\\\\?n|\/\*[\s\S]+?\*\//g; // \n和备注
 module.exports = function extractAssets(assets, extractor) {
   var isDebug = process.env.NODE_ENV == 'development' || process.argv.find(arg => arg.match(/\bdev/));
   var CssCodeReg = isDebug
