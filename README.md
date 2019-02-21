@@ -71,5 +71,31 @@ https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webp
 
 ````
 
+Or like this:
+
+````js
+import replacer from 'webpack-theme-color-replacer/client'
+
+// 动态切换主题色
+export function changeColor(newColor) {
+  if (/^[a-f0-9]+$/.test(newColor)) {
+    newColor = '#' + newColor
+  }
+  var options = {
+    cssUrl: 'css/theme-colors.css',
+    oldColors: ['#ed4040','#4b0'], // current colors array
+    newColors: [newColor, newColor] // new colors array
+  }
+  try {
+    replacer.changer.changeColor(options)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+
+
+````
+
 You can view this sample:
 https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/modules/themeColor/changeColor.vue
