@@ -1,4 +1,4 @@
-//optimize-chunk-assets 钩子的代码处理
+/* optimize-chunk-assets 钩子的代码处理 */
 // var Css_Code_Prefix = 'exports.push([module.i, "'; // from css-loader:  exports.push([module.i, "
 // var Css_Code_Surfix = '}\\n", ""])'; // from css-loader:  }\n', ''])}
 // module.exports = function extractAssets(assets, extractor) {
@@ -24,16 +24,23 @@
 //   });
 //   return cssSrcs
 // }
-// emit钩子的代码处理
 
-var Reg_Lf_Rem = /\\\\?n|\/\*[\s\S]+?\*\//g; // \n和备注
+/* emit钩子的代码处理 */
+
+// \n和备注
+var Reg_Lf_Rem = /\\\\?n|\/\*[\s\S]+?\*\//g;
+
+//css-loader 2:        \n// Module\nexports.push([module.i, \"a{   ...... }\\n\", \"\",{\"version\":3,
+//css-loader 1:        \n// module\nexports.push([module.i, \"a{   ...... }\\n\", \"\"]);
+//css-loader 2@srcmap:   // Module\nexports.push([module.i, ".a{  ......  }\n      }\n    }\n  }\n"],"sourceRoot":""}]);
+var Css_Loader_Reg_DEV = /\bexports\.push\(\[module\.i, \\?"(.+?\})((?:\\\\n)?\\", \\"\\"(?:\]\)|,\{)|\\n"\],\"sourceRoot)/g
+
+// from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
+var Css_Loader_Reg_PROD = /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g
+
 module.exports = function extractAssets(assets, extractor) {
-  var isDebug = process.env.NODE_ENV == 'development' || process.argv.find(arg => arg.match(/\bdev/));
-  var CssCodeReg = isDebug
-    //css-loader 2: \n// Module\nexports.push([module.i, \"a{   ...... }\\n\", \"\",{\"version\":3,
-    //css-loader 1: \n// module\nexports.push([module.i, \"a{   ...... }\\n\", \"\"]);
-    ? /\\nexports\.push\(\[module\.i, \\"(.+?\})(?:\\\\n)?\\", \\"\\"(\]\)|,\s*\{)/g
-    : /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g; // from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
+  var isDebug = process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/));
+  var CssCodeReg = isDebug ? Css_Loader_Reg_DEV : Css_Loader_Reg_PROD
 
   var cssSrcs = [];
   Object.keys(assets).map(fn => {
