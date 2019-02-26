@@ -32,10 +32,11 @@ var Reg_Lf_Rem = /\\\\?n|\/\*[\s\S]+?\*\//g;
 
 //css-loader 2:        \n// Module\nexports.push([module.i, \"a{   ...... }\\n\", \"\",{\"version\":3,
 //css-loader 1:        \n// module\nexports.push([module.i, \"a{   ...... }\\n\", \"\"]);
-//css-loader 2@srcmap:   // Module\nexports.push([module.i, ".a{  ......  }\n      }\n    }\n  }\n"],"sourceRoot":""}]);
-var Css_Loader_Reg_DEV = /\bexports\.push\(\[module\.i, \\?"(.+?\})((?:\\\\n)?\\", \\"\\"(?:\]\)|,\{)|\\n"\],\"sourceRoot)/g
+//css-loader 2@srcmap:   // Module\nexports.push([module.i, "a{   .....   }\n", "",{"version":3
 
-// from css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
+var Css_Loader_Reg_DEV = /\bexports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?\\?", \\?"\\?"(?:\]\)|,\{)/g
+
+//css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 var Css_Loader_Reg_PROD = /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g
 
 module.exports = function extractAssets(assets, extractor) {
