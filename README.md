@@ -27,7 +27,8 @@ module.exports = {
             cssPrefix: true,  // optional. Add a 'body ' prefix to each class name. This can raise css priority.
             resolveCss(resultCss) { // optional. Resolve result css code as you wish.
                 return resultCss.replace(/#4b0/g, '#ed4040')
-            }
+            },
+            // externalCssFiles: ['./node_modules/element-ui/lib/theme-chalk/index.css'], // optional, String or string array. Set external css files (such as cdn css) to extract colors.
         })
     ],
 }

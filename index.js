@@ -31,9 +31,21 @@ class ThemeColorReplacer {
 
         this.getBinder(compiler, 'emit')((compilation, callback) => {
             var srcArray = extractAssets(compilation.assets, this.extractor);
+
+            // 外部的css文件。如cdn加载的
+            if (this.options.externalCssFiles) {
+                [].concat(this.options.externalCssFiles).map(file => {
+                    var src = fs.readFileSync(file, 'utf-8')
+                    var css = this.extractor.extractColors(src)
+                    console.log(css)
+                    srcArray = srcArray.concat(css)
+                })
+            }
+
             var output = dropDuplicate(srcArray).join('\n');
 
-            if (this.options.resolveCss) { // 自定义后续处理
+            // 自定义后续处理
+            if (this.options.resolveCss) {
                 output = this.options.resolveCss(output)
             }
 
