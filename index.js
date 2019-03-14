@@ -37,7 +37,6 @@ class ThemeColorReplacer {
                 [].concat(this.options.externalCssFiles).map(file => {
                     var src = fs.readFileSync(file, 'utf-8')
                     var css = this.extractor.extractColors(src)
-                    console.log(css)
                     srcArray = srcArray.concat(css)
                 })
             }

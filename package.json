@@ -1,6 +1,6 @@
 {
     "name": "webpack-theme-color-replacer",
-    "version": "1.0.19",
+    "version": "1.0.20",
     "description": "A webpack plugin designed to dynamicly change the theme colors. 实现快速动态替换主题色的webpack插件. ",
     "main": "index.js",
     "scripts": {
