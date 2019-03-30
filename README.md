@@ -24,7 +24,7 @@ module.exports = {
                 ...ThemeColorReplacer.getElementUISeries('#409EFF'), // primary color of element-ui
                 '#0cdd3a',  //other custom color
             ],
-            cssPrefix: true,  // optional. Add a 'body ' prefix to each class name. This can raise css priority.
+            cssPrefix: true,  // optional, String or `true` or Function(selector, rules). Add a css prefix to each class name, `true` means to adding `body ` prefix. This can raise css priority over lazy-loading css.
             resolveCss(resultCss) { // optional. Resolve result css code as you wish.
                 return resultCss.replace(/#4b0/g, '#ed4040')
             },
