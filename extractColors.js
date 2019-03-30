@@ -3,7 +3,7 @@ module.exports = function Extractor(options) {
         .map(c => new RegExp(c.replace(/,/g, ',\\s*'), 'i')); // 255, 255,3
 
     var lineReg = /\s+/g;
-    var rightReg = /\}/g;
+    var trimReg = /^\s+|[\}\s]+$|(?<=,)\s+/g; //前空格，后空格，后}，逗号后的空格
     var multiReg = /(^|,\s*)/g
     this.extractColors = function (src) {
         var ret = []
@@ -17,16 +17,25 @@ module.exports = function Extractor(options) {
                 var rules = this.getRules(cssCode)
                 if (rules.length) {
                     var name = src.slice(nameStart, nameEnd)
-                    name = name.replace(rightReg, '') // keyframes may left a '}' prefix here
+                    name = name.replace(trimReg, '') // keyframes may left a '}' prefix here
                     name = name.replace(lineReg, ' ') // lines
                     var p = name.indexOf(';') //@charset utf-8;
                     if (p > -1) {
                         name = name.slice(p + 1)
                     }
 
-                    if (options.cssPrefix) { // 加css名前缀，提升优先级
-                        name = name.replace(multiReg, '$1body ')
+                    // 加css名前缀，提升优先级
+                    var prefix = options.cssPrefix
+                    if (typeof prefix === 'function') {
+                        prefix = prefix(name.split(',').sort().join(','), rules)
                     }
+                    if (prefix && typeof prefix !== 'string') {
+                        prefix = 'body '
+                    }
+                    if (prefix) { // 加css名前缀，提升优先级
+                        name = name.replace(multiReg, '$1' + prefix)
+                    }
+
                     ret.push(name + '{' + rules.join(';') + '}')
                 }
             }
