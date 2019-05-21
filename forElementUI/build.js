@@ -1,9 +1,8 @@
-import getElementUISeries from 'getElementUISeries'
-import varyColor from '../client/varyColor'
+var getElementUISeries = require('./getElementUISeries')
+var varyColor = require('../client/varyColor')
 
-export {getElementUISeries, varyColor}
 
-export function changeSelector(name) {
+function changeSelector(name) {
     // element-ui这几个样式太宽泛，需减小范围
     switch (name) {
         case '.el-button:active':
@@ -19,3 +18,5 @@ export function changeSelector(name) {
             return 'body ' + name
     }
 }
+
+module.exports = {getElementUISeries, varyColor, changeSelector}
