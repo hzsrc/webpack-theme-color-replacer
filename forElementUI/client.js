@@ -1,7 +1,7 @@
 var changer = require('../client/themeColorChanger.js')
 var getElementUISeries = require('./getElementUISeries.js')
 
-var elementUI = {
+var client = {
   version: '2.4.5',
   colorPrimary: '#409EFF' // element-ui default color
 };
@@ -27,8 +27,8 @@ module.exports = {
       var primary = options.primary;
       var others = options.others;
       if (!options.cssUrl) {
-        options.cssUrl = 'https://unpkg.com/element-ui@' + elementUI.version + '/lib/theme-chalk/index.css'
-        primary.oldColor = elementUI.colorPrimary
+        options.cssUrl = 'https://unpkg.com/element-ui@' + client.version + '/lib/theme-chalk/index.css'
+        primary.oldColor = client.colorPrimary
       }
       //primary color series
       newColors = getElementUISeries(primary.newColor)

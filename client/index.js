@@ -1,4 +1,4 @@
-var elementUI = require('../forElementUI/elementUI.js')
+var elementUI = require('../forElementUI/client.js')
 var changer = require('./themeColorChanger.js')
 var varyColor = require('./varyColor')
 
