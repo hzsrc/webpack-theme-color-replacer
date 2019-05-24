@@ -62,4 +62,4 @@ export function changeColor(newColor) {
 ````
 
 You can view this sample:
-https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/modules/themeColor/changeColor.vue
+https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/changeThemeColor.js
