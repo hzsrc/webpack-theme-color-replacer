@@ -47,8 +47,8 @@ module.exports = function extractAssets(assets, extractor) {
   var cssSrcs = [];
   Object.keys(assets).map(fn => {
     if (fn.match(/\.css/i)) {
-      var src = assets[fn].source();
-      [].push.apply(cssSrcs, extractor.extractColors(src))
+      var src = assets[fn].source() || '';
+      [].push.apply(cssSrcs, extractor.extractColors(src.toString()))
     }
     else if (fn.match(/\.js/i)) {
       var src = assets[fn].source()
