@@ -2,10 +2,10 @@
 var idMap = {}
 
 module.exports = {
-    changeColor: function(options) { //varyColorFunc: color => colorArray
+    changeColor: function (options) { //varyColorFunc: color => colorArray
         var oldColors = options.oldColors, newColors = options.newColors, cssUrl = options.cssUrl;
         var _this = this;
-        getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
+        return getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
 
         // var links = [].filter.call(document.querySelectorAll('link'), function (e) {
         //     //根据pages下的所有页面列举css
@@ -20,12 +20,13 @@ module.exports = {
             if (elStyle) {
                 oldColors = elStyle.color.split('|')
                 setCssTo(elStyle, elStyle.innerText)
+                return Promise.resolve()
             }
             else {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
-                _this.getCSSString(url, function(cssText) {
+                return _this.getCSSString(url, function (cssText) {
                     setCssTo(elStyle, cssText)
                 })
             }
@@ -44,14 +45,17 @@ module.exports = {
         return cssText
     },
     getCSSString: function (url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var cssTx = xhr.responseText.replace(/@font-face{[^}]+}/, '')
-                callback(cssTx)
+        return new Promise(resolve => {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var cssTx = xhr.responseText.replace(/@font-face{[^}]+}/, '')
+                    callback(cssTx)
+                    resolve()
+                }
             }
-        }
-        xhr.open('GET', url)
-        xhr.send()
+            xhr.open('GET', url)
+            xhr.send()
+        })
     },
 }
