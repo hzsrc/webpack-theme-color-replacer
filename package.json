@@ -21,5 +21,8 @@
         "url": "http://www.hz300.com/webpack-theme-color-replacer/"
     },
     "license": "MIT",
-    "readme": "readme.md"
+    "readme": "readme.md",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org"
+    }
 }
