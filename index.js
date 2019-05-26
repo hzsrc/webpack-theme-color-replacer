@@ -1,7 +1,7 @@
 'use strict';
 var path = require('path'), fs = require('fs')
 var Extractor = require('./extractColors')
-var extractAssets = require('./extractWebpackAssets')
+var assetsExtract = require('./extractWebpackAssets')
 
 class ThemeColorReplacer {
     constructor(options) {
@@ -24,13 +24,13 @@ class ThemeColorReplacer {
 
         // this.getBinder(compiler, 'compilation')((compilation) => {
         //   this.getBinder(compilation, 'optimize-chunk-assets')((chunks, callback) => {
-        //     [].push.apply(srcArray, extractAssets(compilation.assets, this.extractor))
+        //     [].push.apply(srcArray, assetsExtract.extractAssets(compilation.assets, this.extractor))
         //     callback()
         //   })
         // });
 
         this.getBinder(compiler, 'emit')((compilation, callback) => {
-            var srcArray = extractAssets(compilation.assets, this.extractor);
+            var srcArray = assetsExtract.extractAssets(compilation.assets, this.extractor);
 
             // 外部的css文件。如cdn加载的
             if (this.options.externalCssFiles) {
