@@ -2,7 +2,7 @@
 var idMap = {}
 
 module.exports = {
-    changeColor: function (options) { //varyColorFunc: color => colorArray
+    changeColor: function (options, promiseForIE) { //varyColorFunc: color => colorArray
         var oldColors = options.oldColors, newColors = options.newColors, cssUrl = options.cssUrl;
         var _this = this;
         return getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
@@ -16,6 +16,7 @@ module.exports = {
         // }
 
         function getCssText(url, setCssTo) {
+            var Promise = window.Promise || promiseForIE
             var elStyle = idMap[url] && document.getElementById(idMap[url]);
             if (elStyle) {
                 oldColors = elStyle.color.split('|')
@@ -26,8 +27,11 @@ module.exports = {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
-                return _this.getCSSString(url, function (cssText) {
-                    setCssTo(elStyle, cssText)
+                return new Promise(function (resolve, reject) {
+                    _this.getCSSString(url, function (cssText) {
+                        setCssTo(elStyle, cssText)
+                        resolve()
+                    }, reject)
                 })
             }
         }
@@ -44,18 +48,25 @@ module.exports = {
         })
         return cssText
     },
-    getCSSString: function (url, callback) {
-        return new Promise(resolve => {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
+    getCSSString: function (url, resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
                     var cssTx = xhr.responseText.replace(/@font-face{[^}]+}/, '')
-                    callback(cssTx)
-                    resolve()
+                    resolve(cssTx)
+                } else {
+                    reject(xhr.status)
                 }
             }
-            xhr.open('GET', url)
-            xhr.send()
-        })
+        }
+        xhr.onerror = function (e) {
+            reject(e)
+        }
+        xhr.ontimeout = function (e) {
+            reject(e)
+        }
+        xhr.open('GET', url)
+        xhr.send()
     },
 }
