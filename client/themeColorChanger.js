@@ -5,15 +5,7 @@ module.exports = {
     changeColor: function (options, promiseForIE) { //varyColorFunc: color => colorArray
         var oldColors = options.oldColors, newColors = options.newColors, cssUrl = options.cssUrl;
         var _this = this;
-        return getCssText(cssUrl, setCssTo) //#409EFF - 网上下载的element-ui主色
-
-        // var links = [].filter.call(document.querySelectorAll('link'), function (e) {
-        //     //根据pages下的所有页面列举css
-        //     return /(main|index)\..+\.css/.test(e.href || '')
-        // });
-        // if (links[0]) {
-        //     getCssText(links[0].href, _this.themeColor, setCssTo)
-        // }
+        return getCssText(cssUrl, setCssTo)
 
         function getCssText(url, setCssTo) {
             var Promise = window.Promise || promiseForIE

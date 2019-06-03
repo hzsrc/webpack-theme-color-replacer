@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path'), fs = require('fs')
+var crypto = require('crypto')
 var Extractor = require('./extractColors')
 var assetsExtract = require('./extractWebpackAssets')
 
@@ -51,15 +52,27 @@ class ThemeColorReplacer {
             console.log('Extracted theme color css content length: ' + output.length);
 
             //Add to assets for output
-            compilation.assets[this.options.fileName] = {
+            var outputName = getFileName(this.options.fileName, output)
+            compilation.assets[outputName] = {
                 source: () => output,
                 size: () => output.length
             };
+            if (this.options.resultFileNameTo) {
+                fs.writeFile(this.options.resultFileNameTo, `export default '${outputName}'\n`, err => err && console.error(err))
+            }
 
             callback();
+
+            function getFileName(fileName, src) {
+                var contentHash = crypto.createHash('md4')
+                    .update(src)
+                    .digest("hex")
+                return compilation.getPath(fileName, {contentHash})
+            }
         });
     }
 }
+
 
 function dropDuplicate(arr) {
     var map = {}
