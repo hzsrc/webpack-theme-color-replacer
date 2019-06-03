@@ -2,7 +2,7 @@ var assetsExtract = require('../extractWebpackAssets')
 var Extractor = require('../extractColors')
 var path = require('path')
 var fs = require('fs')
-var pathFn = process.argv[process.argv.length - 1]
+var pathFn = path.join(__dirname, 'test-webpack-output.js') // process.argv[process.argv.length - 1]
 var fn = path.basename(pathFn)
 var content = fs.readFileSync(pathFn, 'utf-8')
 
