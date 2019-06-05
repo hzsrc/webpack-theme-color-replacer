@@ -19,13 +19,13 @@ module.exports = {
     .....
     plugins: [
         new ThemeColorReplacer({
-            fileName: 'css/theme-colors.css', // output css file name
+            fileName: 'css/theme-colors-[contenthash:8].css', // output css file name, suport [contenthash] and [hash].
             matchColors: ['#ed4040', '#4b0'], // colors array for extracting css file
             cssPrefix: true,  // optional, String or `true` or Function(selector, rules). Add a css prefix to each class name, `true` means to adding `body ` prefix. This can raise css priority over lazy-loading css.
             resolveCss(resultCss) { // optional. Resolve result css code as you wish.
                 return resultCss.replace(/#4b0/g, '#ed4040')
             },
-            externalCssFiles: ['./node_modules/element-ui/lib/theme-chalk/client.css'], // optional, String or string array. Set external css files (such as cdn css) to extract colors.
+            externalCssFiles: ['./node_modules/element-ui/lib/theme-chalk/index.css'], // optional, String or string array. Set external css files (such as cdn css) to extract colors.
             changeSelector(cssSelector) { // optional, Funciton. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
                 return cssSelector
             },
@@ -46,7 +46,6 @@ import replacer from 'webpack-theme-color-replacer/client'
 // 动态切换主题色
 export function changeColor(newColor) {
   var options = {
-    cssUrl: 'css/theme-colors.css',
     oldColors: ['#ed4040','#4b0'], // current colors array. The same as `matchColors`
     newColors: [newColor, newColor] // new colors array, one-to-one corresponde with `oldColors`
   }
