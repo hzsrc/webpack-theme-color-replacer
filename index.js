@@ -3,6 +3,7 @@ var path = require('path'), fs = require('fs')
 var crypto = require('crypto')
 var Extractor = require('./extractColors')
 var assetsExtract = require('./extractWebpackAssets')
+var {ConcatSource} = require("webpack-sources");
 
 class ThemeColorReplacer {
     constructor(options) {
@@ -24,12 +25,10 @@ class ThemeColorReplacer {
     apply(compiler) {
 
         // this.getBinder(compiler, 'compilation')((compilation) => {
-        //   this.getBinder(compilation, 'optimize-chunk-assets')((chunks, callback) => {
-        //     [].push.apply(srcArray, assetsExtract.extractAssets(compilation.assets, this.extractor))
-        //     callback()
+        //   this.getBinder(compilation, 'html-webpack-plugin-before-html-processing')((htmlPluginData, callback) => {
+        //     debugger
         //   })
         // });
-
         this.getBinder(compiler, 'emit')((compilation, callback) => {
             var srcArray = assetsExtract.extractAssets(compilation.assets, this.extractor);
 
@@ -57,9 +56,19 @@ class ThemeColorReplacer {
                 source: () => output,
                 size: () => output.length
             };
-            if (this.options.resultFileNameTo) {
-                fs.writeFile(this.options.resultFileNameTo, `export default '${outputName}'\n`, err => err && console.error(err))
-            }
+
+            // 记录动态的文件名，到每个入口
+            compilation.entrypoints.forEach(entrypoint => {
+                var assetName = entrypoint.name + '.js'
+                var entryAsset = compilation.assets[assetName]
+                if (entryAsset) {
+                    compilation.assets[assetName] = new ConcatSource(
+                        `window.__theme_COLOR_url='${outputName}';`,
+                        '\n',
+                        entryAsset,
+                    );
+                }
+            })
 
             callback();
 
@@ -86,7 +95,6 @@ function dropDuplicate(arr) {
     return r
 }
 
-ThemeColorReplacer.getElementUISeries = require('./forElementUI/getElementUISeries.js');
 ThemeColorReplacer.varyColor = require('./client/varyColor');
 
 module.exports = ThemeColorReplacer;

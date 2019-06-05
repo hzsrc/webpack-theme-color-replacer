@@ -19,4 +19,8 @@ function changeSelector(name) {
     }
 }
 
-module.exports = {getElementUISeries, varyColor, changeSelector}
+module.exports = {
+    getElementUISeries: getElementUISeries,
+    varyColor: varyColor,
+    changeSelector: changeSelector
+}

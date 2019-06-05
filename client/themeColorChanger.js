@@ -3,7 +3,10 @@ var idMap = {}
 
 module.exports = {
     changeColor: function (options, promiseForIE) { //varyColorFunc: color => colorArray
-        var oldColors = options.oldColors, newColors = options.newColors, cssUrl = options.cssUrl;
+        var oldColors = options.oldColors || [], newColors = options.newColors || []
+        if (this._isSameArr(oldColors, newColors)) return
+
+        var cssUrl = window.__theme_COLOR_url || options.cssUrl;
         var _this = this;
         return getCssText(cssUrl, setCssTo)
 
@@ -33,6 +36,14 @@ module.exports = {
             elStyle.color = newColors.join('|')
             elStyle.innerText = cssText
         }
+    },
+    _isSameArr(oldColors, newColors) {
+        for (var i = 0, j = oldColors.length; i < j; i++) {
+            if (oldColors[i] !== newColors[i]) {
+                return false
+            }
+        }
+        return true
     },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (color, t) {
