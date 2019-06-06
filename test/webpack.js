@@ -6,14 +6,20 @@ var ThemeColorReplacer = require('../')
 var options = require('./options')
 var config = {
     mode: 'production',
-    entry: {'tmp-output': path.resolve('./test/output-by-webpack.js')},
+    entry: {
+        'tmp-output': path.resolve('./test/output-by-webpack.js'),
+        'tmp-output2': path.resolve('./test/output-by-webpack2.js'),
+    },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js',
     },
+
     plugins: [new ThemeColorReplacer(options)],
     optimization: {
-        runtimeChunk: false,
+        runtimeChunk: {
+            name: 'manifest'
+        },
         minimize: false,
         noEmitOnErrors: true,
         splitChunks: false

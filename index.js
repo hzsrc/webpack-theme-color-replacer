@@ -58,17 +58,7 @@ class ThemeColorReplacer {
             };
 
             // 记录动态的文件名，到每个入口
-            compilation.entrypoints.forEach(entrypoint => {
-                var assetName = entrypoint.name + '.js'
-                var entryAsset = compilation.assets[assetName]
-                if (entryAsset) {
-                    compilation.assets[assetName] = new ConcatSource(
-                        `window.__theme_COLOR_url='${outputName}';`,
-                        '\n',
-                        entryAsset,
-                    );
-                }
-            })
+            addToEntryJs()
 
             callback();
 
@@ -77,6 +67,37 @@ class ThemeColorReplacer {
                     .update(src)
                     .digest("hex")
                 return compilation.getPath(fileName, {contentHash})
+            }
+
+            // 自动注入js代码，设置css文件名
+            function addToEntryJs() {
+                var onlyEntrypoints = {
+                    entrypoints: true,
+                    errorDetails: false,
+                    modules: false,
+                    assets: false,
+                    children: false,
+                    chunks: false,
+                    chunkGroups: false
+                }
+                var entrypoints = compilation.getStats().toJson(onlyEntrypoints).entrypoints;
+                Object.keys(entrypoints).forEach(entryName => {
+                    var entryAssets = entrypoints[entryName].assets
+                    for (var i = 0, l = entryAssets.length; i < l; i++) {
+                        var assetName = entryAssets[i]
+                        if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) {
+                            var assetCode = compilation.assets[assetName]
+                            if (assetCode) {
+                                compilation.assets[assetName] = new ConcatSource(
+                                    `window.__theme_COLOR_url='${outputName}';`,
+                                    '\n',
+                                    assetCode,
+                                );
+                                break;
+                            }
+                        }
+                    }
+                })
             }
         });
     }
