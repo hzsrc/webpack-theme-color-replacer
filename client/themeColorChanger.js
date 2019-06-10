@@ -1,12 +1,17 @@
-﻿var varyColor = require('./varyColor')
-var idMap = {}
+﻿var idMap = {};
+var theme_COLOR_config;
 
 module.exports = {
-    changeColor: function (options, promiseForIE) { //varyColorFunc: color => colorArray
-        var oldColors = options.oldColors || [], newColors = options.newColors || []
+    changeColor: function (options, promiseForIE) {
+        if (!theme_COLOR_config) {
+            theme_COLOR_config = window.__theme_COLOR_cfg || {}
+            delete window.__theme_COLOR_cfg
+        }
+        var oldColors = options.oldColors || theme_COLOR_config.colors || []
+        var newColors = options.newColors || []
         if (this._isSameArr(oldColors, newColors)) return
 
-        var cssUrl = window.__theme_COLOR_url || options.cssUrl;
+        var cssUrl = theme_COLOR_config.url || options.cssUrl;
         var _this = this;
         return getCssText(cssUrl, setCssTo)
 
@@ -17,8 +22,7 @@ module.exports = {
                 oldColors = elStyle.color.split('|')
                 setCssTo(elStyle, elStyle.innerText)
                 return Promise.resolve()
-            }
-            else {
+            } else {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
@@ -35,6 +39,7 @@ module.exports = {
             cssText = _this.replaceCssText(cssText, oldColors, newColors)
             elStyle.color = newColors.join('|')
             elStyle.innerText = cssText
+            theme_COLOR_config.colors = newColors
         }
     },
     _isSameArr(oldColors, newColors) {
