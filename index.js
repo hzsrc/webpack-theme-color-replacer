@@ -45,7 +45,7 @@ class ThemeColorReplacer {
 
             // 自定义后续处理
             if (this.options.resolveCss) {
-                output = this.options.resolveCss(output)
+                output = this.options.resolveCss(output, srcArray)
             }
 
             console.log('Extracted theme color css content length: ' + output.length);
