@@ -43,17 +43,15 @@ Like this:
 ````js
 import replacer from 'webpack-theme-color-replacer/client'
 
-// 动态切换主题色
+// change theme colors at runtime.
 export function changeColor(newColor) {
   var options = {
-    oldColors: ['#ed4040','#4b0'], // current colors array. The same as `matchColors`
-    newColors: [newColor, newColor] // new colors array, one-to-one corresponde with `oldColors`
+    newColors: [newColor, newColor] // new colors array, one-to-one corresponde with `matchColors`
   }
-  try {
-    replacer.changer.changeColor(options)
-  } catch (e) {
-    console.error(e)
-  }
+
+  replacer.changer.changeColor(options, Promise).then(() => {
+      console.log('Theme colors changed!')
+  })
 }
 
 
