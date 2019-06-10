@@ -1,7 +1,7 @@
 This plugin can extract theme color styles from all the outputed css files (such as element-ui theme colors), and make a 'theme-colors.css' file which only contains color styles. At runtime in your web page, the client part will help you to download this css file, and then replace the colors into new customized colors dynamicly.
 
 This is a sample:
-http://test.hz300.com/webpack4/themeColor.html
+https://hzsrc-vue-webpack4-elementui.netlify.com/themeColor.html
 
 Implementation (Chinese):
 https://segmentfault.com/a/1190000016061608
@@ -61,4 +61,4 @@ export function changeColor(newColor) {
 ````
 
 You can view this sample:
-https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/changeThemeColor.js
+https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/themeColorClient.js
