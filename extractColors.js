@@ -24,18 +24,18 @@ module.exports = function Extractor(options) {
                     rules = this.getRules(cssCode)
                 }
                 if (rules.length) {
-                    var name = src.slice(nameStart, nameEnd)
-                    name = name.replace(TrimReg, '$1')
-                    name = name.replace(LineReg, ' ') // lines
-                    var p = name.indexOf(';') //@charset utf-8;
+                    var selector = src.slice(nameStart, nameEnd)
+                    selector = selector.replace(TrimReg, '$1')
+                    selector = selector.replace(LineReg, ' ') // lines
+                    var p = selector.indexOf(';') //@charset utf-8;
                     if (p > -1) {
-                        name = name.slice(p + 1)
+                        selector = selector.slice(p + 1)
                     }
                     // 改变选择器
                     if (options.changeSelector) {
-                        name = options.changeSelector(name.split(',').sort().join(','), rules)
+                        selector = options.changeSelector(selector.split(',').sort().join(','), rules) || selector
                     }
-                    ret.push(name + '{' + rules.join(';') + '}')
+                    ret.push(selector + '{' + rules.join(';') + '}')
                 }
             } else {
                 break;
