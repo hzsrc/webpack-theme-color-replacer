@@ -42,7 +42,7 @@ module.exports = {
             theme_COLOR_config.colors = newColors
         }
     },
-    _isSameArr(oldColors, newColors) {
+    _isSameArr: function (oldColors, newColors) {
         for (var i = 0, j = oldColors.length; i < j; i++) {
             if (oldColors[i] !== newColors[i]) {
                 return false
