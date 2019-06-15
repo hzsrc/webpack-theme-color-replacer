@@ -72,13 +72,15 @@ module.exports = class Handler {
                 var assetName = entryAssets[i]
                 if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) {
                     var assetCode = compilation.assets[assetName]
-                    if (assetCode) {
+                    if (assetCode && !assetCode._isThemeJsInjected) {
                         var config = {url: outputName, colors: this.options.matchColors}
-                        compilation.assets[assetName] = new ConcatSource(
+                        var cSrc = new ConcatSource(
                             `window.__theme_COLOR_cfg=${JSON.stringify(config)};`,
                             '\n',
                             assetCode,
                         );
+                        cSrc._isThemeJsInjected = true
+                        compilation.assets[assetName] = cSrc
                         break;
                     }
                 }
