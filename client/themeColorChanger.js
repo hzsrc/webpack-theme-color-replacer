@@ -6,12 +6,15 @@ module.exports = {
         var win = window // || global
         if (!theme_COLOR_config) {
             theme_COLOR_config = win.__theme_COLOR_cfg || {}
-            delete win.__theme_COLOR_cfg
         }
         var oldColors = options.oldColors || theme_COLOR_config.colors || []
         var newColors = options.newColors || []
 
         var cssUrl = theme_COLOR_config.url || options.cssUrl;
+        if (options.changeUrl) {
+            cssUrl = options.changeUrl(cssUrl)
+        }
+
         var _this = this;
         var Promise = promiseForIE || win.Promise
         return new Promise(function (resolve, reject) {
