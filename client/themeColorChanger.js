@@ -10,13 +10,17 @@ module.exports = {
         }
         var oldColors = options.oldColors || theme_COLOR_config.colors || []
         var newColors = options.newColors || []
-        if (this._isSameArr(oldColors, newColors)) return
 
         var cssUrl = theme_COLOR_config.url || options.cssUrl;
         var _this = this;
-        var PromiseCls = promiseForIE || win.Promise || ExecFunc
-        return new PromiseCls(function (resolve, reject) {
-            getCssText(cssUrl, setCssTo, resolve, reject)
+        var Promise = promiseForIE || win.Promise
+        return new Promise(function (resolve, reject) {
+            if (this._isSameArr(oldColors, newColors)) {
+                resolve()
+            }
+            else {
+                getCssText(cssUrl, setCssTo, resolve, reject)
+            }
         })
 
         function getCssText(url, setCssTo, resolve, reject) {
@@ -44,6 +48,9 @@ module.exports = {
         }
     },
     _isSameArr: function (oldColors, newColors) {
+        if (oldColors.length !== newColors.length) {
+            return false
+        }
         for (var i = 0, j = oldColors.length; i < j; i++) {
             if (oldColors[i] !== newColors[i]) {
                 return false
@@ -77,10 +84,4 @@ module.exports = {
         xhr.open('GET', url)
         xhr.send()
     },
-}
-
-function ExecFunc(func) {
-    var fn = function () {
-    }
-    func(fn, fn)
 }
