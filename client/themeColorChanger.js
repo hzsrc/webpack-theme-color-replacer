@@ -13,25 +13,25 @@ module.exports = {
 
         var cssUrl = theme_COLOR_config.url || options.cssUrl;
         var _this = this;
-        return getCssText(cssUrl, setCssTo)
+        var Promise = window.Promise || promiseForIE // || ExecFunc
+        return new Promise(function (resolve, reject) {
+            getCssText(cssUrl, setCssTo, resolve, reject)
+        })
 
-        function getCssText(url, setCssTo) {
-            var Promise = window.Promise || promiseForIE
+        function getCssText(url, setCssTo, resolve, reject) {
             var elStyle = idMap[url] && document.getElementById(idMap[url]);
             if (elStyle) {
                 oldColors = elStyle.color.split('|')
                 setCssTo(elStyle, elStyle.innerText)
-                return Promise.resolve()
+                resolve()
             } else {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
-                return new Promise(function (resolve, reject) {
-                    _this.getCSSString(url, function (cssText) {
-                        setCssTo(elStyle, cssText)
-                        resolve()
-                    }, reject)
-                })
+                _this.getCSSString(url, function (cssText) {
+                    setCssTo(elStyle, cssText)
+                    resolve()
+                }, reject)
             }
         }
 
@@ -61,8 +61,7 @@ module.exports = {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    var cssTx = xhr.responseText.replace(/@font-face{[^}]+}/, '')
-                    resolve(cssTx)
+                    resolve(xhr.responseText)
                 } else {
                     reject(xhr.status)
                 }
@@ -78,3 +77,9 @@ module.exports = {
         xhr.send()
     },
 }
+
+// function ExecFunc(func) {
+//     var fn = function () {
+//     }
+//     func(fn, fn)
+// }

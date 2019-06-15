@@ -1,11 +1,11 @@
 // \n和备注
-var Reg_Lf_Rem = /\\\\?n|\n|\/\*[\s\S]+?\*\//g
+var Reg_Lf_Rem = /\\\\?n|\n|\\\\?r|\/\*[\s\S]+?\*\//g
 
-var LineReg = /\s+/g
+var SpaceReg = /\s+/g
 var TrimReg = /(^|,)\s+|\s+($)/g; //前空格，逗号后的空格; 后空格
 
 module.exports = function Extractor(options) {
-    var matchColors = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
+    var matchColorRegs = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
         .map(c => new RegExp(c.replace(/,/g, ',\\s*'), 'i')); // 255, 255,3
 
     this.extractColors = function (src) {
@@ -26,7 +26,7 @@ module.exports = function Extractor(options) {
                 if (rules.length) {
                     var selector = src.slice(nameStart, nameEnd)
                     selector = selector.replace(TrimReg, '$1')
-                    selector = selector.replace(LineReg, ' ') // lines
+                    selector = selector.replace(SpaceReg, ' ') // lines
                     var p = selector.indexOf(';') //@charset utf-8;
                     if (p > -1) {
                         selector = selector.slice(p + 1)
@@ -69,13 +69,17 @@ module.exports = function Extractor(options) {
         var rules = cssCode.split(';')
         var ret = []
         rules.forEach(rule => {
-            var index = matchColors.findIndex(colorReg => {
-                return colorReg.test(rule)
-            })
-            if (index > -1) {
-                ret.push(rule.replace(LineReg, ' '))
+            if (this.testCssCode(rule)) {
+                ret.push(rule.replace(SpaceReg, ' '))
             }
         })
         return ret
+    }
+
+    this.testCssCode = function (cssCode) {
+        for (var colorReg of matchColorRegs) {
+            if (colorReg.test(cssCode)) return true
+        }
+        return false
     }
 }

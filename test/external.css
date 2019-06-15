@@ -1,0 +1,26 @@
+.external-tag {
+    background-color: #fef2e8;
+    display: inline-block;
+    height: .32rem;
+    padding: 0 .1rem;
+    line-height: .3rem;
+    font-size: .12rem;
+    color: #f67a17;
+    border: .01rem solid #fde4d1;
+    border-radius: .04rem;
+    box-sizing: border-box;
+    white-space: nowrap
+}
+
+.external-tag.is-hit {
+    border-color: #f67a17
+}
+
+.external-tag .external-tag__close {
+    color: #f67a17
+}
+
+.external-tag .external-tag__close:hover {
+    color: #fff;
+    background-color: #f67a17
+}

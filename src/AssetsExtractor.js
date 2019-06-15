@@ -1,3 +1,7 @@
+var path = require('path')
+var fs = require('fs')
+var Extractor = require('./Extractor')
+
 /* optimize-chunk-assets 钩子的代码处理 */
 // var Css_Code_Prefix = 'exports.push([module.i, "'; // from css-loader:  exports.push([module.i, "
 // var Css_Code_Surfix = '}\\n", ""])'; // from css-loader:  }\n', ''])}
@@ -35,34 +39,45 @@
 var Css_Loader_Reg_DEV = /\bn?exports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?\\?", \\?"\\?"(?:\]\)|,\{)/g;
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
-var Css_Loader_Reg_PROD = /\.push\(\[\w+\.i,['"](.+?\})\\n['"],['"]['"]\]\)/g;
+var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})(\\n)?['"],['"]['"]\]\)/g;
 
-module.exports = {
-    extractAssets: function (assets, extractor) {
-        var isDebug = process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/));
-
+module.exports = function AssetsExtractor(options) {
+    this.extractor = new Extractor(options)
+    this.extractAssets = function (assets) {
         var cssSrcs = [];
         Object.keys(assets).map(fn => {
-            var items = this.extractAsset(fn, assets[fn], extractor, isDebug)
+            var items = this.extractAsset(fn, assets[fn])
             cssSrcs = cssSrcs.concat(items)
         });
         return cssSrcs;
-    },
-    extractAsset: function (fn, asset, extractor, isDebug) {
+    }
+    this.extractAsset = function (fn, asset) {
         if (fn.match(/\.css$/i)) {
             var src = assetToStr(asset);
-            // require('fs').writeFileSync('d:\\t\\'+ fn, src);
-            return extractor.extractColors(src);
+            writeFileForDebugIf(fn, src, this.extractor)
+            return this.extractor.extractColors(src);
         }
         else if (fn.match(/\.js$/i)) {
             src = assetToStr(asset);
-            // require('fs').writeFileSync('d:\\t\\'+ fn, src)
+            writeFileForDebugIf(fn, src, this.extractor)
             var cssSrcs = []
-            var CssCodeReg = isDebug ? Css_Loader_Reg_DEV : Css_Loader_Reg_PROD;
+            var CssCodeReg = options.isJsUgly ? Css_Loader_Reg_UGLY : Css_Loader_Reg_DEV;
             src.replace(CssCodeReg, (match, $1) => {
-                cssSrcs = cssSrcs.concat(extractor.extractColors($1));
+                cssSrcs = cssSrcs.concat(this.extractor.extractColors($1));
             });
             return cssSrcs
+        }
+
+        function writeFileForDebugIf(fn, src, extractor) {
+            // `npm run dev --theme_debug` to write asset files for debug
+            try {
+                if (process.env.npm_config_theme_debug) {
+                    if (extractor.testCssCode(src)) {
+                        fs.writeFileSync(path.join(process.cwd(), '_tmp_' + path.basename(fn)), src)
+                    }
+                }
+            } catch (e) {
+            }
         }
     }
 };
@@ -71,3 +86,4 @@ function assetToStr(asset) {
     var src = asset.source() || '';
     return src.toString();
 }
+

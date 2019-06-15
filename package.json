@@ -1,32 +1,37 @@
 {
-    "name": "webpack-theme-color-replacer",
-    "version": "1.2.7",
-    "description": "A webpack plugin designed to dynamicly change the theme colors at runtime. 实现运行时快速动态替换主题色的webpack插件. ",
-    "main": "index.js",
-    "scripts": {
-        "test": "node test/index.js",
-        "webpack": "node test/webpack.js"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "webpack": "*"
-    },
-    "keywords": [
-        "webpack",
-        "javascript",
-        "theme",
-        "color",
-        "replacer",
-        "runtime"
-    ],
-    "author": {
-        "name": "James.Huang",
-        "email": "hz932@qq.com",
-        "url": "http://www.hz300.com/webpack-theme-color-replacer/"
-    },
-    "license": "MIT",
-    "readme": "readme.md",
-    "publishConfig": {
-        "registry": "https://registry.npmjs.org"
-    }
+  "name": "webpack-theme-color-replacer",
+  "version": "1.2.8",
+  "description": "A webpack plugin designed to dynamicly change the theme colors at runtime. 实现运行时快速动态替换主题色的webpack插件. ",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node test/nodejs/index.js",
+    "webpack": "node test/webpack/webpack.js",
+    "debug": "npm run webpack --theme_debug",
+    "el-color": "node -e \"console.log(require('./forElementUI/getElementUISeries.js')('#f67a17').join('|'))\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^3.0.0",
+    "glob": "^7.1.3",
+    "rimraf": "^2.6.3",
+    "webpack": "*"
+  },
+  "keywords": [
+    "webpack",
+    "javascript",
+    "theme",
+    "color",
+    "replacer",
+    "runtime"
+  ],
+  "author": {
+    "name": "James.Huang",
+    "email": "hz932@qq.com",
+    "url": "http://www.hz300.com/webpack-theme-color-replacer/"
+  },
+  "license": "MIT",
+  "readme": "readme.md",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  }
 }

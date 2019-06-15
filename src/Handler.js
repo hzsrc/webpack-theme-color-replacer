@@ -1,0 +1,102 @@
+'use strict';
+var path = require('path'), fs = require('fs')
+var crypto = require('crypto')
+var AssetsExtractor = require('./AssetsExtractor')
+var {ConcatSource} = require("webpack-sources");
+
+module.exports = class Handler {
+    constructor(options) {
+        // Default options
+        this.options = Object.assign({
+            fileName: 'css/theme-colors-[contenthash:8].css',
+            matchColors: [],
+            isJsUgly: !(process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/))),
+        }, options);
+        this.assetsExtractor = new AssetsExtractor(this.options)
+    }
+
+    handle(compilation) {
+        var srcArray = this.assetsExtractor.extractAssets(compilation.assets);
+
+        // 外部的css文件。如cdn加载的
+        if (this.options.externalCssFiles) {
+            [].concat(this.options.externalCssFiles).map(file => {
+                var src = fs.readFileSync(file, 'utf-8')
+                var css = this.assetsExtractor.extractor.extractColors(src)
+                srcArray = srcArray.concat(css)
+            })
+        }
+
+        var output = dropDuplicate(srcArray).join('\n');
+
+        // 自定义后续处理
+        if (this.options.resolveCss) {
+            output = this.options.resolveCss(output, srcArray)
+        }
+
+        console.log('Extracted theme color css content length: ' + output.length);
+
+        //Add to assets for output
+        var outputName = getFileName(this.options.fileName, output)
+        compilation.assets[outputName] = {
+            source: () => output,
+            size: () => output.length
+        };
+
+        // 记录动态的文件名，到每个入口
+        this.addToEntryJs(outputName, compilation)
+
+        function getFileName(fileName, src) {
+            var contentHash = crypto.createHash('md4')
+                .update(src)
+                .digest("hex")
+            return compilation.getPath(fileName, {contentHash})
+        }
+    }
+
+    // 自动注入js代码，设置css文件名
+    addToEntryJs(outputName, compilation) {
+        var onlyEntrypoints = {
+            entrypoints: true,
+            errorDetails: false,
+            modules: false,
+            assets: false,
+            children: false,
+            chunks: false,
+            chunkGroups: false
+        }
+        var entrypoints = compilation.getStats().toJson(onlyEntrypoints).entrypoints;
+        Object.keys(entrypoints).forEach(entryName => {
+            var entryAssets = entrypoints[entryName].assets
+            for (var i = 0, l = entryAssets.length; i < l; i++) {
+                var assetName = entryAssets[i]
+                if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) {
+                    var assetCode = compilation.assets[assetName]
+                    if (assetCode) {
+                        var config = {url: outputName, colors: this.options.matchColors}
+                        compilation.assets[assetName] = new ConcatSource(
+                            `window.__theme_COLOR_cfg=${JSON.stringify(config)};`,
+                            '\n',
+                            assetCode,
+                        );
+                        break;
+                    }
+                }
+            }
+        })
+    }
+}
+
+
+function dropDuplicate(arr) {
+    var map = {}
+    var r = []
+    for (var s of arr) {
+        if (!map[s]) {
+            r.push(s)
+            map[s] = 1
+        }
+    }
+    return r
+}
+
