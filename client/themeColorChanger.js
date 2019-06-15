@@ -18,7 +18,7 @@ module.exports = {
         var _this = this;
         var Promise = promiseForIE || win.Promise
         return new Promise(function (resolve, reject) {
-            if (this._isSameArr(oldColors, newColors)) {
+            if (isSameArr(oldColors, newColors)) {
                 resolve()
             }
             else {
@@ -50,17 +50,6 @@ module.exports = {
             theme_COLOR_config.colors = newColors
         }
     },
-    _isSameArr: function (oldColors, newColors) {
-        if (oldColors.length !== newColors.length) {
-            return false
-        }
-        for (var i = 0, j = oldColors.length; i < j; i++) {
-            if (oldColors[i] !== newColors[i]) {
-                return false
-            }
-        }
-        return true
-    },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (color, t) {
             cssText = cssText.replace(new RegExp(color.replace(/,/g, ',\\s*'), 'ig'), newColors[t]) // 255, 255,3
@@ -87,4 +76,16 @@ module.exports = {
         xhr.open('GET', url)
         xhr.send()
     },
+}
+
+function isSameArr(oldColors, newColors) {
+    if (oldColors.length !== newColors.length) {
+        return false
+    }
+    for (var i = 0, j = oldColors.length; i < j; i++) {
+        if (oldColors[i] !== newColors[i]) {
+            return false
+        }
+    }
+    return true
 }
