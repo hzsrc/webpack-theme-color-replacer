@@ -20,7 +20,9 @@ function changeSelector(selector) {
 }
 
 function multiChange(selector, surfix) {
-    return selector.split(',').map(s => s + surfix).join(',')
+    return selector.split(',').map(function (s) {
+        return s + surfix
+    }).join(',')
 }
 
 module.exports = {

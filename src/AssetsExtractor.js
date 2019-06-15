@@ -39,7 +39,7 @@ var Extractor = require('./Extractor')
 var Css_Loader_Reg_DEV = /\bn?exports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?\\?", \\?"\\?"(?:\]\)|,\{)/g;
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
-var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})(\\n)?['"],['"]['"]\]\)/g;
+var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]\)|,\{)/g;
 
 module.exports = function AssetsExtractor(options) {
     this.extractor = new Extractor(options)
