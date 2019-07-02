@@ -15,7 +15,7 @@ function extractOne(pathFn) {
 
     var ret = new AssetsExtract(options).extractAsset(fn, {source: t => content})
     var code = ret.join('\n')
-    var outFile = path.join(__dirname, 'css/' + fn + '.css')
+    var outFile = path.join(__dirname, '../dist/css/' + fn + '.css')
     fs.writeFileSync(outFile, code)
     console.log('Output length:', code.length, '\n' + outFile)
 }
