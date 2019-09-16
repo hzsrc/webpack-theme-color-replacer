@@ -19,8 +19,8 @@ module.exports = {
     .....
     plugins: [
         new ThemeColorReplacer({
-            fileName: 'css/theme-colors-[contenthash:8].css', // output css file name, suport [contenthash] and [hash].
             matchColors: ['#ed4040', '#4b0'], // colors array for extracting css file
+            fileName: 'css/theme-colors-[contenthash:8].css', //optional. output css file name, suport [contenthash] and [hash].
             resolveCss(resultCss) { // optional. Resolve result css code as you wish.
                 return resultCss.replace(/#4b0/g, '#ed4040')
             },

@@ -44,20 +44,29 @@ var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]
 module.exports = function AssetsExtractor(options) {
     this.extractor = new Extractor(options)
     this.extractAssets = function (assets) {
-        var cssSrcs = [];
-        Object.keys(assets).map(fn => {
-            var items = this.extractAsset(fn, assets[fn])
-            cssSrcs = cssSrcs.concat(items)
-        });
-        return cssSrcs;
+        var srcArray = extractAll(this)
+        if (srcArray.length === 0) {
+            // 容错一次
+            options.isJsUgly = !options.isJsUgly
+            srcArray = extractAll(this)
+        }
+        return srcArray;
+
+        function extractAll(that) {
+            var cssSrcs = [];
+            Object.keys(assets).map(fn => {
+                var items = that.extractAsset(fn, assets[fn])
+                cssSrcs = cssSrcs.concat(items)
+            });
+            return cssSrcs
+        }
     }
     this.extractAsset = function (fn, asset) {
         if (fn.match(/\.css$/i)) {
             var src = assetToStr(asset);
             writeFileForDebugIf(fn, src, this.extractor)
             return this.extractor.extractColors(src);
-        }
-        else if (fn.match(/\.js$/i)) {
+        } else if (fn.match(/\.js$/i)) {
             src = assetToStr(asset);
             writeFileForDebugIf(fn, src, this.extractor)
             var cssSrcs = []

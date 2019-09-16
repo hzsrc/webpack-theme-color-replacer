@@ -8,11 +8,9 @@ var options = require('../options')
 var themeColorChanger = require('../../client/themeColorChanger')
 var getElementUISeries = require('../../forElementUI/getElementUISeries')
 
+startRun()
 
 function startRun() {
-    // js是否压缩过
-    options.isJsUgly = false
-
     var files = glob.sync(path.join(__dirname, 'output-by-webpack/*.*'))
     files.map(extractOne)
 }
@@ -21,7 +19,9 @@ function extractOne(pathFn) {
     var fn = path.basename(pathFn)
     var content = fs.readFileSync(pathFn, 'utf-8')
 
-    var ret = new AssetsExtract(options).extractAsset(fn, {source: t => content})
+    var mockAssets = {[fn]: {source: t => content}}
+
+    var ret = new AssetsExtract(options).extractAssets(mockAssets)
     var code = ret.join('\n')
     var outFile = path.join(__dirname, './css/' + fn + '.css')
 
