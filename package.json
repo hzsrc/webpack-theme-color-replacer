@@ -14,7 +14,8 @@
     "css-loader": "^3.0.0",
     "glob": "^7.1.3",
     "rimraf": "^2.6.3",
-    "webpack": "*"
+    "webpack": "*",
+    "mkdirp": "^0.5.1"
   },
   "keywords": [
     "webpack",

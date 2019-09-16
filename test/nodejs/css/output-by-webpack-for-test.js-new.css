@@ -1,0 +1,25 @@
+.rgba{ color: #bd3be750}
+.el-tag{ background-color: #f8ebfd; color: #bd3be7; border: .01rem solid #f2d8fa}
+.el-tag.is-hit{ border-color: #bd3be7}
+.el-tag .el-tag__close{ color: #bd3be7}
+.el-tag .el-tag__close:hover{ background-color: #bd3be7}
+.el-tag--dark{ background-color: #bd3be7}
+.el-tag--dark,.el-tag--dark.is-hit{ border-color: #bd3be7}
+.el-tag--dark .el-tag__close:hover{ background-color: #ca62ec}
+.el-tag--plain{ border-color: #e5b1f5; color: #bd3be7}
+.el-tag--plain.is-hit{ border-color: #bd3be7}
+.el-tag--plain .el-tag__close{ color: #bd3be7}
+.el-tag--plain .el-tag__close:hover{ background-color: #bd3be7}
+.el-textarea__inner:focus{ border-color: #bd3be7}
+.el-input__inner:focus{ border-color: #bd3be7}
+.el-input.is-active .el-input__inner{ border-color: #bd3be7}
+.el-switch__label.is-active{ color: #bd3be7}
+.el-switch.is-checked .el-switch__core{ border-color: #bd3be7; background-color: #bd3be7}
+.el-color-predefine__color-selector.selected{ box-shadow: 0 0 .03rem .02rem #bd3be7}
+.el-color-dropdown__btn:hover{ color: #bd3be7; border-color: #bd3be7}
+.el-color-dropdown__link-btn{ color: #bd3be7}
+.el-color-dropdown__link-btn:hover{ color: tint(#bd3be7, 20%)}
+.series-primary[data-v-8c1482da]{ background: #bd3be7}
+.series-3[data-v-8c1482da]{ background: #d176ee}
+.series-5[data-v-8c1482da]{ background: #de9df3}
+.primay-color{ color: #bd3be7}
