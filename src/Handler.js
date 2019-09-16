@@ -3,6 +3,7 @@ var path = require('path'), fs = require('fs')
 var crypto = require('crypto')
 var AssetsExtractor = require('./AssetsExtractor')
 var {ConcatSource} = require("webpack-sources");
+var LineReg = /\n/g
 
 module.exports = class Handler {
     constructor(options) {
@@ -44,7 +45,7 @@ module.exports = class Handler {
         };
 
         // 记录动态的文件名，到每个入口
-        this.addToEntryJs(outputName, compilation)
+        this.addToEntryJs(outputName, compilation, output)
 
         function getFileName(fileName, src) {
             var contentHash = crypto.createHash('md4')
@@ -55,7 +56,7 @@ module.exports = class Handler {
     }
 
     // 自动注入js代码，设置css文件名
-    addToEntryJs(outputName, compilation) {
+    addToEntryJs(outputName, compilation, cssCode) {
         var onlyEntrypoints = {
             entrypoints: true,
             errorDetails: false,
@@ -71,14 +72,9 @@ module.exports = class Handler {
             for (var i = 0, l = entryAssets.length; i < l; i++) {
                 var assetName = entryAssets[i]
                 if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) {
-                    var assetCode = compilation.assets[assetName]
-                    if (assetCode && !assetCode._isThemeJsInjected) {
-                        var config = {url: outputName, colors: this.options.matchColors}
-                        var cSrc = new ConcatSource(
-                            `window.__theme_COLOR_cfg=${JSON.stringify(config)};`,
-                            '\n',
-                            assetCode,
-                        );
+                    var assetSource = compilation.assets[assetName]
+                    if (assetSource && !assetSource._isThemeJsInjected) {
+                        var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
                         compilation.assets[assetName] = cSrc
                         break;
@@ -86,6 +82,15 @@ module.exports = class Handler {
                 }
             }
         })
+    }
+
+    getEntryJs(outputName, assetSource, cssCode) {
+        var config = {url: outputName, colors: this.options.matchColors}
+        var configJs = `window.__theme_COLOR_cfg=${JSON.stringify(config)};\n`
+        if (this.options.injectCss) {
+            configJs = configJs + 'window.__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + '\n'
+        }
+        return new ConcatSource(configJs, assetSource)
     }
 }
 

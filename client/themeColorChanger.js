@@ -20,8 +20,7 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             if (isSameArr(oldColors, newColors)) {
                 resolve()
-            }
-            else {
+            } else {
                 getCssText(cssUrl, setCssTo, resolve, reject)
             }
         })
@@ -36,6 +35,7 @@ module.exports = {
                 elStyle = document.head.appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
+
                 _this.getCSSString(url, function (cssText) {
                     setCssTo(elStyle, cssText)
                     resolve()
@@ -57,6 +57,14 @@ module.exports = {
         return cssText
     },
     getCSSString: function (url, resolve, reject) {
+        var css = window.__theme_COLOR_css
+        if (css) {
+            // css已内嵌在js中
+            resolve(css)
+            window.__theme_COLOR_css = ''
+            return
+        }
+
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
