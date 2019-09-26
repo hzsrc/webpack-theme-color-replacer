@@ -27,7 +27,7 @@ module.exports = function Extractor(options) {
                 if (rules.length) {
                     var selector = src.slice(nameStart, nameEnd)
                     selector = selector.replace(TrimReg, '$1')
-                    selector = selector.replace(SubCssReg, '')
+                    selector = selector.replace(SubCssReg, '>')
                     selector = selector.replace(SpaceReg, ' ') // lines
                     var p = selector.indexOf(';') //@charset utf-8;
                     if (p > -1) {
