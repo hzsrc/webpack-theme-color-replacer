@@ -60,8 +60,8 @@ module.exports = {
         var css = window.__theme_COLOR_css
         if (css) {
             // css已内嵌在js中
-            resolve(css)
             window.__theme_COLOR_css = ''
+            resolve(css)
             return
         }
 

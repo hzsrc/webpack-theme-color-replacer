@@ -28,6 +28,7 @@ module.exports = {
             changeSelector(selector, util) { // optional, Funciton. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
                 return util.changeEach(selector, '.el-button--default')
             },
+            injectCss: false, // optional. Inject css text in js file, not need to download `theme-colors-xxx.css` any more.
             isJsUgly: process.env.NODE_ENV !== 'development', // optional. Set to `true` if your js is uglified. Default is set by process.env.NODE_ENV.
         })
     ],

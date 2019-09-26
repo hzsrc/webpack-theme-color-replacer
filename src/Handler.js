@@ -71,14 +71,14 @@ module.exports = class Handler {
             var entryAssets = entrypoints[entryName].assets
             for (var i = 0, l = entryAssets.length; i < l; i++) {
                 var assetName = entryAssets[i]
-                if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) {
+                if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) { //
                     var assetSource = compilation.assets[assetName]
-                    if (assetSource && !assetSource._isThemeJsInjected) {
+                    if (!assetSource._isThemeJsInjected) {
                         var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
                         compilation.assets[assetName] = cSrc
-                        break;
                     }
+                    break;
                 }
             }
         })
@@ -86,11 +86,11 @@ module.exports = class Handler {
 
     getEntryJs(outputName, assetSource, cssCode) {
         var config = {url: outputName, colors: this.options.matchColors}
-        var configJs = `window.__theme_COLOR_cfg=${JSON.stringify(config)};\n`
+        var configJs = `\nwindow.__theme_COLOR_cfg=${JSON.stringify(config)};\n`
         if (this.options.injectCss) {
-            configJs = configJs + 'window.__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + '\n'
+            configJs = configJs + 'window.__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'
         }
-        return new ConcatSource(configJs, assetSource)
+        return new ConcatSource(assetSource, configJs)
     }
 }
 
