@@ -4,8 +4,22 @@ var theme_COLOR_config;
 module.exports = {
     changeColor: function (options, promiseForIE) {
         var win = window // || global
+        var Promise = promiseForIE || win.Promise
+        var _this = this;
         if (!theme_COLOR_config) {
-            theme_COLOR_config = win.__theme_COLOR_cfg || {}
+            theme_COLOR_config = win.__theme_COLOR_cfg
+            if (!theme_COLOR_config) {
+                if (_this.tryCount < 9) {
+                    _this.tryCount = _this.tryCount + 1 || 1
+                    return new Promise(function (resolve, reject) {
+                        setTimeout(function () {
+                            resolve(_this.changeColor(options, promiseForIE))
+                        }, 100)
+                    })
+                } else{
+                    theme_COLOR_config = {}
+                }
+            }
         }
         var oldColors = options.oldColors || theme_COLOR_config.colors || []
         var newColors = options.newColors || []
@@ -15,8 +29,6 @@ module.exports = {
             cssUrl = options.changeUrl(cssUrl)
         }
 
-        var _this = this;
-        var Promise = promiseForIE || win.Promise
         return new Promise(function (resolve, reject) {
             if (isSameArr(oldColors, newColors)) {
                 resolve()
