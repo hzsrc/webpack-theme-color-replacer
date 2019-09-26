@@ -3,6 +3,7 @@ var Reg_Lf_Rem = /\\\\?n|\n|\\\\?r|\/\*[\s\S]+?\*\//g
 
 var SpaceReg = /\s+/g
 var TrimReg = /(^|,)\s+|\s+($)/g; //前空格，逗号后的空格; 后空格
+var SubCssReg = /\s*>\s*/g // div > a 替换为 div>a
 
 module.exports = function Extractor(options) {
     var matchColorRegs = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
@@ -26,6 +27,7 @@ module.exports = function Extractor(options) {
                 if (rules.length) {
                     var selector = src.slice(nameStart, nameEnd)
                     selector = selector.replace(TrimReg, '$1')
+                    selector = selector.replace(SubCssReg, '')
                     selector = selector.replace(SpaceReg, ' ') // lines
                     var p = selector.indexOf(';') //@charset utf-8;
                     if (p > -1) {
@@ -33,7 +35,11 @@ module.exports = function Extractor(options) {
                     }
                     // 改变选择器
                     if (options.changeSelector) {
-                        selector = options.changeSelector(selector.split(',').sort().join(','), rules) || selector
+                        var util = {
+                            rules: rules,
+                            changeEach: changeEach
+                        }
+                        selector = options.changeSelector(selector.split(',').sort().join(','), util) || selector
                     }
                     ret.push(selector + '{' + rules.join(';') + '}')
                 }
@@ -52,8 +58,7 @@ module.exports = function Extractor(options) {
                 var char = src[cssEnd]
                 if (!char) {
                     return -1
-                }
-                else if (char === '{') {
+                } else if (char === '{') {
                     level++
                 } else if (char === '}') {
                     level--
@@ -63,6 +68,14 @@ module.exports = function Extractor(options) {
                 }
             }
             return cssEnd
+        }
+
+        function changeEach(selector, surfix, prefix) {
+            surfix = surfix || ''
+            prefix = prefix || ''
+            return selector.split(',').map(function (s) {
+                return prefix + s + surfix
+            }).join(',')
         }
     }
     this.getRules = function (cssCode) {

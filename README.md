@@ -25,8 +25,8 @@ module.exports = {
                 return resultCss.replace(/#4b0/g, '#ed4040')
             },
             externalCssFiles: ['./node_modules/element-ui/lib/theme-chalk/index.css'], // optional, String or string array. Set external css files (such as cdn css) to extract colors.
-            changeSelector(cssSelector) { // optional, Funciton. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
-                return cssSelector
+            changeSelector(selector, util) { // optional, Funciton. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
+                return util.changeEach(selector, '.el-button--default')
             },
             isJsUgly: process.env.NODE_ENV !== 'development', // optional. Set to `true` if your js is uglified. Default is set by process.env.NODE_ENV.
         })
