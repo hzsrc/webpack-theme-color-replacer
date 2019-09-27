@@ -2,24 +2,15 @@
 var theme_COLOR_config;
 
 module.exports = {
+    _tryNum: 0,
     changeColor: function (options, promiseForIE) {
         var win = window // || global
         var Promise = promiseForIE || win.Promise
         var _this = this;
         if (!theme_COLOR_config) {
             theme_COLOR_config = win.__theme_COLOR_cfg
-            if (!theme_COLOR_config) {
-                if (_this.tryCount < 9) {
-                    _this.tryCount = _this.tryCount + 1 || 1
-                    return new Promise(function (resolve, reject) {
-                        setTimeout(function () {
-                            resolve(_this.changeColor(options, promiseForIE))
-                        }, 100)
-                    })
-                } else{
-                    theme_COLOR_config = {}
-                }
-            }
+            var later = retry()
+            if (later) return later
         }
         var oldColors = options.oldColors || theme_COLOR_config.colors || []
         var newColors = options.newColors || []
@@ -36,6 +27,21 @@ module.exports = {
                 getCssText(cssUrl, setCssTo, resolve, reject)
             }
         })
+
+        function retry() {
+            if (!theme_COLOR_config) {
+                if (_this._tryNum < 9) {
+                    _this._tryNum = _this._tryNum + 1
+                    return new Promise(function (resolve, reject) {
+                        setTimeout(function () {
+                            resolve(_this.changeColor(options, promiseForIE))
+                        }, 100)
+                    })
+                } else {
+                    theme_COLOR_config = {}
+                }
+            }
+        }
 
         function getCssText(url, setCssTo, resolve, reject) {
             var elStyle = idMap[url] && document.getElementById(idMap[url]);
