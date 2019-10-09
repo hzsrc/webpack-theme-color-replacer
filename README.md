@@ -48,6 +48,7 @@ import replacer from 'webpack-theme-color-replacer/client'
 export function changeColor(newColor) {
   var options = {
     newColors: [newColor, newColor], // new colors array, one-to-one corresponde with `matchColors`
+    appendToEl: 'head', //optional. The element selector for appending child with `<style>`, default is 'body'. Using `appendToEl: 'body'` can make the css priority higher than any css in <head>
     // changeUrl(cssUrl) {
     //   return `/${cssUrl}`; // while router is not `hash` mode, it needs absolute path
     // },

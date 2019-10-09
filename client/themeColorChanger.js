@@ -50,7 +50,8 @@ module.exports = {
                 setCssTo(elStyle, elStyle.innerText)
                 resolve()
             } else {
-                elStyle = document.head.appendChild(document.createElement('style'))
+                elStyle = document.querySelector(options.appendToEl || 'body')
+                    .appendChild(document.createElement('style'))
                 idMap[url] = 'css_' + (+new Date())
                 elStyle.setAttribute('id', idMap[url])
 

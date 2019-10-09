@@ -16,8 +16,7 @@ function changeSelector(selector, util) {
         case '.el-pagination button:hover':
             return selector + ':not(:disabled)'
         default:
-            // 因懒加载模块的css在主题色样式theme-colors.css之后加载，会覆盖theme-colors.css的样式，导致主题色替换失败。为了避免这情况，需要添加前缀提升优先级。
-            return util.changeEach(selector, '', 'body ')
+            return selector
     }
 }
 
