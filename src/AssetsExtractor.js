@@ -76,13 +76,15 @@ module.exports = function AssetsExtractor(options) {
             });
             return cssSrcs
         }
+        return []
 
         function writeFileForDebugIf(fn, src, extractor) {
             // `npm run dev --theme_debug` to write asset files for debug
             try {
                 if (process.env.npm_config_theme_debug) {
                     if (extractor.testCssCode(src)) {
-                        fs.writeFileSync(path.join(process.cwd(), '_tmp_' + path.basename(fn)), src)
+                        var info = JSON.stringify(options) + '\n' + src
+                        fs.writeFileSync(path.join(process.cwd(), '_tmp_' + path.basename(fn)), info)
                     }
                 }
             } catch (e) {

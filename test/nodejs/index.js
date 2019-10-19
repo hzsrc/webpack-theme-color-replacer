@@ -26,7 +26,6 @@ function extractOne(pathFn) {
     var outFile = path.join(__dirname, './css/' + fn + '.css')
 
     mkdirp.sync(path.dirname(outFile))
-
     fs.writeFileSync(outFile, code)
     console.log('Output length:', code.length, '\n' + outFile)
 
