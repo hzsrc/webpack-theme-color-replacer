@@ -5,10 +5,12 @@ var glob = require('glob')
 var mkdirp = require('mkdirp')
 
 /*
-nodeRun({
-    src: ['/a/b/c.css', 'src/css/*.*'],
-    fileName: 'dist/css/theme-colors.[contenthash:8].css',
-    matchColors: ......
+// use in Nodejs:
+var extractColor = require('webpack-theme-color-replacer/src/nodeRun')
+extractColor({
+    src: 'css/*.*',
+    fileName: 'css/theme-color-[contenthash:8].css',
+    matchColors: ['#e2721d', '#ccc']
 })
 */
 module.exports = function run(options) {
@@ -27,8 +29,7 @@ function getMockAssets(options) {
     srcList.map(src => {
         glob.sync(path.resolve(src)).map(pathFn => {
             var fn = path.relative('.', pathFn)
-            var content = fs.readFileSync(pathFn, 'utf-8')
-            mockAssets[fn] = { source: t => content }
+            mockAssets[fn] = { source: () => fs.readFileSync(pathFn, 'utf-8') }
         })
     })
     return mockAssets;
@@ -41,13 +42,13 @@ function getFileName(outFile, code) {
         var p2 = outFile.indexOf(']', p1)
         if (p2 > p1) {
             var len = outFile.substr(p1, p2 - p1)
-            outFile = outFile.replace('[contenthash:' + len + ']', md5(code).slice(0, len))
+            outFile = outFile.replace('[contenthash:' + len + ']', getHash(code).slice(0, len))
         }
     }
     return outFile;
 }
 
-function md5(str) {
-    var md5 = require('crypto').createHash('md5');
-    return md5.update(str).digest('hex');
+function getHash(str) {
+    var md = require('crypto').createHash('md4');
+    return md.update(str).digest('hex');
 }
