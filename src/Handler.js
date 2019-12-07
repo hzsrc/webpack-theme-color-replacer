@@ -17,24 +17,7 @@ module.exports = class Handler {
     }
 
     handle(compilation) {
-        var srcArray = this.assetsExtractor.extractAssets(compilation.assets);
-
-        // 外部的css文件。如cdn加载的
-        if (this.options.externalCssFiles) {
-            [].concat(this.options.externalCssFiles).map(file => {
-                var src = fs.readFileSync(file, 'utf-8')
-                var css = this.assetsExtractor.extractor.extractColors(src)
-                srcArray = srcArray.concat(css)
-            })
-        }
-
-        var output = dropDuplicate(srcArray).join('\n');
-
-        // 自定义后续处理
-        if (this.options.resolveCss) {
-            output = this.options.resolveCss(output, srcArray)
-        }
-
+        var output = this.assetsExtractor.extractAssets(compilation.assets);
         console.log('Extracted theme color css content length: ' + output.length);
 
         //Add to assets for output
@@ -55,7 +38,7 @@ module.exports = class Handler {
         }
     }
 
-    // 自动注入js代码，设置css文件名
+// 自动注入js代码，设置css文件名
     addToEntryJs(outputName, compilation, cssCode) {
         var onlyEntrypoints = {
             entrypoints: true,
@@ -94,16 +77,4 @@ module.exports = class Handler {
     }
 }
 
-
-function dropDuplicate(arr) {
-    var map = {}
-    var r = []
-    for (var s of arr) {
-        if (!map[s]) {
-            r.push(s)
-            map[s] = 1
-        }
-    }
-    return r
-}
 

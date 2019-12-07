@@ -43,7 +43,28 @@ var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]
 
 module.exports = function AssetsExtractor(options) {
     this.extractor = new Extractor(options)
+
     this.extractAssets = function (assets) {
+        var srcArray = this.extractToArray(assets);
+
+        // 外部的css文件。如cdn加载的
+        if (options.externalCssFiles) {
+            [].concat(options.externalCssFiles).map(file => {
+                var src = fs.readFileSync(file, 'utf-8')
+                var css = this.extractor.extractColors(src)
+                srcArray = srcArray.concat(css)
+            })
+        }
+
+        var output = dropDuplicate(srcArray).join('\n');
+
+        // 自定义后续处理
+        if (options.resolveCss) {
+            output = options.resolveCss(output, srcArray)
+        }
+        return output
+    }
+    this.extractToArray = function (assets) {
         var srcArray = extractAll(this)
         if (srcArray.length === 0) {
             // 容错一次
@@ -98,3 +119,14 @@ function assetToStr(asset) {
     return src.toString();
 }
 
+function dropDuplicate(arr) {
+    var map = {}
+    var r = []
+    for (var s of arr) {
+        if (!map[s]) {
+            r.push(s)
+            map[s] = 1
+        }
+    }
+    return r
+}
