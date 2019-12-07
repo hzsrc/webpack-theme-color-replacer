@@ -68,3 +68,7 @@ https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/the
 
 # issues report
 If you have issues with this plugin, please run your command with `--theme_debug` option, such as `npm run dev --theme_debug`, then upload the outputed `_tmp_xxx` files while reporting issues. Thanks!
+
+#  update log
+### 1.3.2
+Default to append `<style>...</style>` to `<body>`, not to `<head>` any more, in order to resolve most priority problems in lazy loading pages. Thanks to [iota9star](https://github.com/iota9star) : [15](https://github.com/hzsrc/webpack-theme-color-replacer/issues/15)
