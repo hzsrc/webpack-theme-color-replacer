@@ -20,7 +20,7 @@ module.exports = function run(options) {
     var outFile = getFileName(options.fileName, code);
     mkdirp.sync(path.dirname(outFile))
     fs.writeFileSync(outFile, code)
-    return code
+    return {code, outFile}
 }
 
 function getMockAssets(options) {

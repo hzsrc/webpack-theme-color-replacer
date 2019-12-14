@@ -38,6 +38,22 @@ module.exports = {
 You can view this sample:
 https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webpack.base.conf.js
 
+---
+* Other build tool(not webpack)
+
+Otherwise, if you use other build tool(like gulp) but not webpack, you can use this plugin by nodejs:
+````js
+var nodeRun = require('webpack-theme-color-replacer/src/nodeRun');
+var {code, outFile} = nodeRun({
+    src: 'src/css/**/*.css', // source css files. string or string array, as `glob`.
+    matchColors: ['#ed4040', '#4b0', '255,80,80'],
+    fileName: 'css/theme-colors-[contenthash:8].css',
+    // ...
+})
+// do sth with outFile
+````
+See this sample: https://github.com/hzsrc/webpack-theme-color-replacer/blob/master/src/nodeRun.js
+
 # 3.Usage in your runtime web page
 Like this:
 

@@ -17,11 +17,11 @@ function startRun() {
 function extractOne(pathFn) {
     var fn = path.basename(pathFn)
     var content = fs.readFileSync(pathFn, 'utf-8')
-    var outFile = path.join(__dirname, './dist/' + fn + '.css')
-    var code = nodeRun({
+    var fileName = path.join(__dirname, './dist/' + fn + '.css')
+    var { code, outFile } = nodeRun({
         ...options.build,
         src: pathFn,
-        fileName: outFile,
+        fileName,
     })
 
     console.log('Output length:', code.length, '\n' + outFile)
