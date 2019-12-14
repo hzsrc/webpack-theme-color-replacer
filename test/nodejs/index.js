@@ -17,9 +17,9 @@ function startRun() {
 function extractOne(pathFn) {
     var fn = path.basename(pathFn)
     var content = fs.readFileSync(pathFn, 'utf-8')
-    var outFile = path.join(__dirname, './css/' + fn + '.css')
+    var outFile = path.join(__dirname, './dist/' + fn + '.css')
     var code = nodeRun({
-        ...options,
+        ...options.build,
         src: pathFn,
         fileName: outFile,
     })
@@ -27,9 +27,8 @@ function extractOne(pathFn) {
     console.log('Output length:', code.length, '\n' + outFile)
 
 
-    var newColors = getElementUISeries('#bd3be7')
-    var replacedCss = themeColorChanger.replaceCssText(code, options.matchColors, newColors)
+    var replacedCss = themeColorChanger.replaceCssText(code, options.build.matchColors, options.runtime.newColors)
 
-    var replacedFn = path.join(__dirname, './css/' + fn + '-replaced.css')
+    var replacedFn = path.join(__dirname, './dist/' + fn + '-replaced.css')
     fs.writeFileSync(replacedFn, replacedCss)
 }

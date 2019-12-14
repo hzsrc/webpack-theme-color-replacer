@@ -1,8 +1,10 @@
 process.env.NODE_ENV = 'production'
 var path = require('path')
+var fs = require('fs')
 
 var webpack = require('webpack')
-var ThemeColorReplacer = require('../../src/index')
+var ThemeColorReplacer = require('../../src')
+var client = require('../../client')
 
 var options = require('../options')
 var config = {
@@ -21,12 +23,12 @@ var config = {
         }]
     },
 
-    plugins: [new ThemeColorReplacer(options)],
+    plugins: [new ThemeColorReplacer(options.build)],
     optimization: {
         runtimeChunk: {
             name: 'manifest'
         },
-        minimize: options.isJsUgly,
+        minimize: options.build.isJsUgly,
         noEmitOnErrors: true,
         splitChunks: false
     }
@@ -49,5 +51,15 @@ function doWebpack() {
         }) + '\n\n')
 
         console.log('  Build complete.\n')
+
+        testReplaced();
     })
+}
+
+function testReplaced() {
+    var dir = 'test/webpack/dist/css'
+    var cssFile = fs.readdirSync(dir)[0]
+    var cssText = fs.readFileSync(dir + '/' + cssFile, 'utf-8')
+    var replacedCss = client.changer.replaceCssText(cssText, options.build.matchColors, options.runtime.newColors)
+    fs.writeFileSync(dir + '/test.css-replaced.css', replacedCss)
 }

@@ -1,5 +1,16 @@
 .rgba {
-    color: #f67a1750;
+    color: #f67a1780;
+    background: rgb(246, 122, 23);
+    color: rgba(246, 122, 23, 0.5);
+}
+
+.c222 {
+    color: #222
+}
+
+.c222223 {
+    color: #222223;
+    border-color: #22222350;
 }
 
 .el-tag {
