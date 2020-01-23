@@ -6,10 +6,10 @@ https://hzsrc-vue-webpack4-elementui.netlify.com/themeColor.html
 Implementation (Chinese):
 https://segmentfault.com/a/1190000016061608
 
-# 1.Install
+# Install
 npm i -D webpack-theme-color-replacer
 
-# 2.Cofig for webpack
+# Cofig for webpack
 
 ````js
 
@@ -28,7 +28,7 @@ module.exports = {
             // changeSelector(selector, util) { // optional, Funciton. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
             //     return util.changeEach(selector, '.el-button--default')
             // },
-            injectCss: false, // optional. Inject css text in js file, not need to download `theme-colors-xxx.css` any more.
+            injectCss: false, // optional. Inject css text into js file, no need to download `theme-colors-xxx.css` any more.
             isJsUgly: process.env.NODE_ENV !== 'development', // optional. Set to `true` if your js is uglified. Default is set by process.env.NODE_ENV.
         })
     ],
@@ -54,11 +54,11 @@ var {code, outFile} = nodeRun({
 ````
 See this sample: https://github.com/hzsrc/webpack-theme-color-replacer/blob/master/src/nodeRun.js
 
-# 3.Usage in your runtime web page
+# Usage in your runtime web page
 Like this:
 
 ````js
-import replacer from 'webpack-theme-color-replacer/client'
+import client from 'webpack-theme-color-replacer/client'
 
 // change theme colors at runtime.
 export function changeColor() {
@@ -70,7 +70,7 @@ export function changeColor() {
     // },
   }
 
-  replacer.changer.changeColor(options, Promise).then(() => {
+  client.changer.changeColor(options, Promise).then(() => {
       console.log('Theme colors changed!')
   })
 }
@@ -81,6 +81,43 @@ export function changeColor() {
 
 You can view this sample:
 https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/themeColorClient.js
+
+# Options for build
+These options are used for `new ThemeColorReplacer(options)`.
+
+#### * matchColors: Array&lt;string>
+Colors array for extracting css file. Css rules which have any one of these colors will be extracted out.
+    
+#### * fileName: string
+Optional. output css file name, suport [contenthash] and [hash].
+
+#### * resolveCss: Function(resultCss : string) : string
+Optional. Resolve result css code as you wish.
+
+#### * externalCssFiles : string | Array&lt;string>
+Optional. Set external css files (such as cdn css) to extract colors.
+
+#### * changeSelector : Function(selector: string, util: { rules: Array&lt;String>, changeEach: Function } ): string
+Optional. Changing css selectors, in order to raise css priority, to resolve lazy-loading problems.
+
+#### * injectCss: boolean
+Optional. Inject css text into js file, no need to download `theme-colors-xxx.css` any more.
+
+#### * isJsUgly: boolean
+Optional. Default value: process.env.NODE_ENV !== 'development'. Set to `true` if your js is uglified. Default is set by process.env.NODE_ENV.
+
+# Options for runtime
+These options are used for `client.changer.changeColor(options)`
+
+#### * newColors: Array&lt;string>
+New colors array for changing, one-to-one corresponde with `matchColors`.
+
+#### * appendToEl: string
+Optional. The element selector for this plugin to appending with child node `<style>`. Default is 'body'. Using `appendToEl: 'body'` can make the priority of theme-color-css higher than any other css in <head> element.
+
+#### * changeUrl: Function(cssUrl: string): string
+Optional. Change the theme-color-css download url if you need. While router is not `hash` mode, it needs to change url to an absolute path(start with `/`).
+
 
 # issues report
 If you have issues with this plugin, please run your command with `--theme_debug` option, such as `npm run dev --theme_debug`, then upload the outputed `_tmp_xxx` files while reporting issues. Thanks!
