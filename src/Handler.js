@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 var path = require('path'), fs = require('fs')
 var crypto = require('crypto')
 var AssetsExtractor = require('./AssetsExtractor')
@@ -56,7 +56,7 @@ module.exports = class Handler {
                 var assetName = entryAssets[i]
                 if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) { //
                     var assetSource = compilation.assets[assetName]
-                    if (!assetSource._isThemeJsInjected) {
+                    if (assetSource && !assetSource._isThemeJsInjected) {
                         var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
                         compilation.assets[assetName] = cSrc
