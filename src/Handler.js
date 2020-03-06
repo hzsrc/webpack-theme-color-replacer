@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 var path = require('path'), fs = require('fs')
 var crypto = require('crypto')
 var AssetsExtractor = require('./AssetsExtractor')
