@@ -9,7 +9,9 @@
     "debug": "npm run webpack --theme_debug",
     "el-color": "node -e \"console.log(require('./forElementUI/getElementUISeries.js')('#f67a17').join('|'))\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "webpack-sources": "*"
+  },
   "devDependencies": {
     "css-loader": "^3.0.0",
     "glob": "^7.1.3",
