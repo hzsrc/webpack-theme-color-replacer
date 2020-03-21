@@ -40,6 +40,7 @@ var Css_Loader_Reg_DEV = /\bn?exports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]\)|,\{)/g;
+var CssExtReg = /\.css$/i, JsExtReg = /\.js$/i
 
 module.exports = function AssetsExtractor(options) {
     this.extractor = new Extractor(options)
@@ -76,18 +77,22 @@ module.exports = function AssetsExtractor(options) {
         function extractAll(that) {
             var cssSrcs = [];
             Object.keys(assets).map(fn => {
-                var items = that.extractAsset(fn, assets[fn])
-                cssSrcs = cssSrcs.concat(items)
+                // 原本每修改一点源码，都需要对整个项目的assets翻一遍css，影响性能。
+                // 故改为在asset上缓存上一次的结果，对没发生变化的asset直接取缓存(已发生变化的asset已经是新对象，无缓存)。
+                var asset = assets[fn]
+                var cssRules = asset._themeCssCache || that.extractAsset(fn, asset)
+                asset._themeCssCache = cssRules
+                cssSrcs = cssSrcs.concat(cssRules)
             });
             return cssSrcs
         }
     }
     this.extractAsset = function (fn, asset) {
-        if (fn.match(/\.css$/i)) {
+        if (fn.match(CssExtReg)) {
             var src = assetToStr(asset);
             writeFileForDebugIf(fn, src, this.extractor)
             return this.extractor.extractColors(src);
-        } else if (fn.match(/\.js$/i)) {
+        } else if (fn.match(JsExtReg)) {
             src = assetToStr(asset);
             writeFileForDebugIf(fn, src, this.extractor)
             var cssSrcs = []
@@ -101,14 +106,14 @@ module.exports = function AssetsExtractor(options) {
 
         function writeFileForDebugIf(fn, src, extractor) {
             // `npm run dev --theme_debug` to write asset files for debug
-            try {
-                if (process.env.npm_config_theme_debug) {
+            if (process.env.npm_config_theme_debug) {
+                try {
                     if (extractor.testCssCode(src)) {
                         var info = JSON.stringify(options) + '\n' + src
                         fs.writeFileSync(path.join(process.cwd(), '_tmp_' + path.basename(fn)), info)
                     }
+                } catch (e) {
                 }
-            } catch (e) {
             }
         }
     }
