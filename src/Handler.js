@@ -60,8 +60,8 @@ module.exports = class Handler {
                         var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
                         compilation.assets[assetName] = cSrc
-                    }
-                    break;
+                        break;
+                    }                    
                 }
             }
         })
