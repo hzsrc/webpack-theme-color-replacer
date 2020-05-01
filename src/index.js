@@ -1,9 +1,5 @@
 'use strict';
-var path = require('path'), fs = require('fs')
-var crypto = require('crypto')
-var Extractor = require('./Extractor')
 var Handler = require('./Handler')
-var {ConcatSource} = require("webpack-sources");
 
 class ThemeColorReplacer {
     constructor(options) {

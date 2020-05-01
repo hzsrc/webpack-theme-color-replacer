@@ -1,8 +1,7 @@
 'use strict';
-var path = require('path'), fs = require('fs')
 var crypto = require('crypto')
 var AssetsExtractor = require('./AssetsExtractor')
-var {ConcatSource} = require("webpack-sources");
+var { ConcatSource } = require('webpack-sources');
 var LineReg = /\n/g
 
 module.exports = class Handler {
@@ -33,8 +32,8 @@ module.exports = class Handler {
         function getFileName(fileName, src) {
             var contentHash = crypto.createHash('md4')
                 .update(src)
-                .digest("hex")
-            return compilation.getPath(fileName, {contentHash})
+                .digest('hex')
+            return compilation.getPath(fileName, { contentHash })
         }
     }
 
@@ -61,14 +60,14 @@ module.exports = class Handler {
                         cSrc._isThemeJsInjected = true
                         compilation.assets[assetName] = cSrc
                         break;
-                    }                    
+                    }
                 }
             }
         })
     }
 
     getEntryJs(outputName, assetSource, cssCode) {
-        var config = {url: outputName, colors: this.options.matchColors}
+        var config = { url: outputName, colors: this.options.matchColors }
         var configJs = `\nwindow.__theme_COLOR_cfg=${JSON.stringify(config)};\n`
         if (this.options.injectCss) {
             configJs = configJs + 'window.__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'

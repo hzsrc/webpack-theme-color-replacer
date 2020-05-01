@@ -67,9 +67,12 @@ module.exports = function AssetsExtractor(options) {
     }
     this.extractToArray = function (assets) {
         var srcArray = extractAll(this)
-        if (srcArray.length === 0) {
+        if (srcArray.length === 0 && !this._uglyChanged) {
             // 容错一次
+            this._uglyChanged = true
             options.isJsUgly = !options.isJsUgly
+            //清空缓存
+            Object.keys(assets).map(fn => assets[fn]._themeCssCache = 0)
             srcArray = extractAll(this)
         }
         return srcArray;

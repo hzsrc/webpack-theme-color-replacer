@@ -7,6 +7,8 @@ var ThemeColorReplacer = require('../../src')
 var client = require('../../client')
 
 var options = require('../options')
+var testContent = require('../testContent')
+
 var config = {
     mode: 'production',
     entry: {
@@ -61,5 +63,9 @@ function testReplaced() {
     var cssFile = fs.readdirSync(dir)[0]
     var cssText = fs.readFileSync(dir + '/' + cssFile, 'utf-8')
     var replacedCss = client.changer.replaceCssText(cssText, options.build.matchColors, options.runtime.newColors)
-    fs.writeFileSync(dir + '/test.css-replaced.css', replacedCss)
+    var replacedFn = dir + '/test.css-replaced.css'
+    fs.writeFileSync(replacedFn, replacedCss)
+
+    testContent(cssText, cssFile, false)
+    testContent(replacedCss, replacedFn, true)
 }
