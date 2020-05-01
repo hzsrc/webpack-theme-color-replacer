@@ -1,10 +1,10 @@
-﻿var idMap = {};
+﻿var idMap = {}; // {[url]: {id,color}}
 var theme_COLOR_config;
 
 module.exports = {
     _tryNum: 0,
     changeColor: function (options, promiseForIE) {
-        var win = window // || global
+        var win = window
         var Promise = promiseForIE || win.Promise
         var _this = this;
         if (!theme_COLOR_config) {
@@ -44,16 +44,17 @@ module.exports = {
         }
 
         function getCssText(url, setCssTo, resolve, reject) {
-            var elStyle = idMap[url] && document.getElementById(idMap[url]);
-            if (elStyle) {
-                oldColors = elStyle.color.split('|')
+            var last = idMap[url]
+            var elStyle = last && document.getElementById(last.id);
+            if (elStyle && last.color) {
+                oldColors = last.color.split('|')
                 setCssTo(elStyle, elStyle.innerText)
                 resolve()
             } else {
                 elStyle = document.querySelector(options.appendToEl || 'body')
                     .appendChild(document.createElement('style'))
-                idMap[url] = 'css_' + (+new Date())
-                elStyle.setAttribute('id', idMap[url])
+                idMap[url] = { id: 'css_' + (+new Date()), color: newColors.join('|') }
+                elStyle.setAttribute('id', idMap[url].id)
 
                 _this.getCSSString(url, function (cssText) {
                     setCssTo(elStyle, cssText)
@@ -64,7 +65,6 @@ module.exports = {
 
         function setCssTo(elStyle, cssText) {
             cssText = _this.replaceCssText(cssText, oldColors, newColors)
-            elStyle.color = newColors.join('|')
             elStyle.innerText = cssText
             theme_COLOR_config.colors = newColors
         }
