@@ -1,4 +1,4 @@
-﻿var idMap = {}; // {[url]: {id,color}}
+﻿var idMap = {}; // {[url]: {id,colors}}
 var theme_COLOR_config;
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
         if (!theme_COLOR_config) {
             theme_COLOR_config = win.__theme_COLOR_cfg
             var later = retry()
+            //重试直到theme_COLOR_config加载
             if (later) return later
         }
         var oldColors = options.oldColors || theme_COLOR_config.colors || []
@@ -24,7 +25,7 @@ module.exports = {
             if (isSameArr(oldColors, newColors)) {
                 resolve()
             } else {
-                getCssText(cssUrl, setCssTo, resolve, reject)
+                setCssText(cssUrl, resolve, reject)
             }
         })
 
@@ -43,31 +44,36 @@ module.exports = {
             }
         }
 
-        function getCssText(url, setCssTo, resolve, reject) {
-            var last = idMap[url]
+        function setCssText(url, resolve, reject) {
+            var last = idMap[url] //url可能被changeUrl改变
             var elStyle = last && document.getElementById(last.id);
-            if (elStyle && last.color) {
-                oldColors = last.color.split('|')
-                setCssTo(elStyle, elStyle.innerText)
+            if (elStyle && last.colors) {
+                //之前已替换过
+                oldColors = last.colors
+                setCssTo(elStyle.innerText)
                 resolve()
             } else {
+                //第一次替换
+                last = { id: 'css_' + (+new Date()) }
+                idMap[url] = last
                 elStyle = document.querySelector(options.appendToEl || 'body')
                     .appendChild(document.createElement('style'))
-                idMap[url] = { id: 'css_' + (+new Date()), color: newColors.join('|') }
-                elStyle.setAttribute('id', idMap[url].id)
+
+                elStyle.setAttribute('id', last.id)
 
                 _this.getCSSString(url, function (cssText) {
-                    setCssTo(elStyle, cssText)
+                    setCssTo(cssText)
                     resolve()
                 }, reject)
             }
+
+            function setCssTo(cssText) {
+                cssText = _this.replaceCssText(cssText, oldColors, newColors)
+                elStyle.innerText = cssText
+                last.colors = newColors
+            }
         }
 
-        function setCssTo(elStyle, cssText) {
-            cssText = _this.replaceCssText(cssText, oldColors, newColors)
-            elStyle.innerText = cssText
-            theme_COLOR_config.colors = newColors
-        }
     },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (color, t) {
