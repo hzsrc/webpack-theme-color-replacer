@@ -34,7 +34,14 @@ module.exports = {
     ],
 }
 ````
-
+If you use customized runtime-chunk filename, it should contains a string `manifest.`, like this:
+````js
+optimization: {
+  runtimeChunk: {
+    name: entrypoint => 'manifest.' +  entrypoint.name,
+  },
+}
+````
 You can view this sample:
 https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webpack.base.conf.js
 
