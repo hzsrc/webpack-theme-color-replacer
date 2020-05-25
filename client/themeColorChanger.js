@@ -1,4 +1,4 @@
-﻿var idMap = {}; // {[url]: {id,colors}}
+﻿var _urlColors = {}; // {[url]: {id,colors}}
 var theme_COLOR_config;
 
 module.exports = {
@@ -22,10 +22,16 @@ module.exports = {
         }
 
         return new Promise(function (resolve, reject) {
+            var last = _urlColors[cssUrl] //url可能被changeUrl改变
+            if (last) {
+                //之前已替换过
+                oldColors = last.colors
+            }
+
             if (isSameArr(oldColors, newColors)) {
                 resolve()
             } else {
-                setCssText(cssUrl, resolve, reject)
+                setCssText(last, cssUrl, resolve, reject)
             }
         })
 
@@ -44,25 +50,23 @@ module.exports = {
             }
         }
 
-        function setCssText(url, resolve, reject) {
-            var last = idMap[url] //url可能被changeUrl改变
+        function setCssText(last, url, resolve, reject) {
             var elStyle = last && document.getElementById(last.id);
             if (elStyle && last.colors) {
-                //之前已替换过
-                oldColors = last.colors
                 setCssTo(elStyle.innerText)
+                last.colors = newColors
                 resolve()
             } else {
                 //第一次替换
-                last = { id: 'css_' + (+new Date()) }
-                idMap[url] = last
+                var id = 'css_' + (+new Date())
                 elStyle = document.querySelector(options.appendToEl || 'body')
                     .appendChild(document.createElement('style'))
 
-                elStyle.setAttribute('id', last.id)
+                elStyle.setAttribute('id', id)
 
-                _this.getCSSString(url, function (cssText) {
+                _this.getCssString(url, function (cssText) {
                     setCssTo(cssText)
+                    _urlColors[url] = {id: id, colors: newColors}
                     resolve()
                 }, reject)
             }
@@ -70,7 +74,6 @@ module.exports = {
             function setCssTo(cssText) {
                 cssText = _this.replaceCssText(cssText, oldColors, newColors)
                 elStyle.innerText = cssText
-                last.colors = newColors
             }
         }
 
@@ -82,7 +85,7 @@ module.exports = {
         })
         return cssText
     },
-    getCSSString: function (url, resolve, reject) {
+    getCssString: function (url, resolve, reject) {
         var css = window.__theme_COLOR_css
         if (css) {
             // css已内嵌在js中
