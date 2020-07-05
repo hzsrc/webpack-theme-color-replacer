@@ -35,8 +35,9 @@ var Extractor = require('./Extractor')
 //css-loader 2:        \n// Module\nexports.push([module.i, \"a{   ...... }\\n\", \"\",{\"version\":3,
 //css-loader 1:        \n// module\nexports.push([module.i, \"a{   ...... }\\n\", \"\"]);
 //css-loader 2@srcmap:   // Module\nexports.push([module.i, "a{   .....   }\n", "",{"version":3
+//css-loader@srcmap.less // Module\nexports.push([module.i, "a{ .....   ;\n  }\n}\n\n\n/*# sourceMappingURL=antd.css.map*/", "",{"version":3,"
 
-var Css_Loader_Reg_DEV = /\bn?exports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?\\?", \\?"\\?"(?:\]\)|,\s*\{)/g;
+var Css_Loader_Reg_DEV = /\bn?exports\.push\(\[module\.i, \\?"(.+?\})(?:\\?\\n)?(?:[\\n]*\/\*#.+?\*\/)?\\?", \\?"\\?"(?:\]\)|,\s*\{)/g;
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]\)|,\{)/g;
