@@ -6,11 +6,11 @@ var webpack = require('webpack')
 var ThemeColorReplacer = require('../../src')
 var client = require('../../client')
 
-var options = require('../options')
+var option = require('../options').build
 var testContent = require('../testContent')
 
 var config = {
-    mode: 'production',
+    mode: 'development',
     entry: {
         'index': path.resolve(__dirname, './main.js'),
     },
@@ -25,12 +25,12 @@ var config = {
         }]
     },
 
-    plugins: [new ThemeColorReplacer(options.build)],
+    plugins: [new ThemeColorReplacer(option)],
     optimization: {
         runtimeChunk: {
             name: 'manifest'
         },
-        minimize: options.build.isJsUgly,
+        minimize: option.isJsUgly,
         noEmitOnErrors: true,
         splitChunks: false
     }
@@ -62,10 +62,10 @@ function testReplaced() {
     var dir = 'test/webpack/dist/css'
     var cssFile = fs.readdirSync(dir)[0]
     var cssText = fs.readFileSync(dir + '/' + cssFile, 'utf-8')
-    var replacedCss = client.changer.replaceCssText(cssText, options.build.matchColors, options.runtime.newColors)
+    var replacedCss = client.changer.replaceCssText(cssText, option.matchColors, option.newColors)
     var replacedFn = dir + '/test.css-replaced.css'
     fs.writeFileSync(replacedFn, replacedCss)
 
-    testContent(cssText, cssFile, false)
-    testContent(replacedCss, replacedFn, true)
+    testContent.build(cssText, cssFile, false)
+    testContent.build(replacedCss, replacedFn, true)
 }

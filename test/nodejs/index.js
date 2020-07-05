@@ -12,28 +12,31 @@ startRun()
 
 function startRun() {
     var files = glob.sync(path.join(__dirname, 'output-by-webpack/*.*'))
-    files.map(extractOne)
+    files.map(file => extractOne(file, options.build, testContent.build))
+
+    files = glob.sync(path.join(__dirname, 'output-by-webpack-dev/*.*'))
+    files.map(file => extractOne(file, options.dev, testContent.dev))
 }
 
-function extractOne(pathFn) {
+function extractOne(pathFn, option, testFn) {
     var fn = path.basename(pathFn)
     var fileName = path.join(__dirname, './dist/' + fn + '.css')
     var { code, outFile } = nodeRun({
-        ...options.build,
+        ...option,
         src: pathFn,
         fileName,
         isJsUgly: true,
     })
 
-    console.log('Output length:', code.length, '\n' + path.basename(outFile))
+    console.log('Output length:', code.length, '\t' + path.basename(outFile))
 
-    var replacedCss = themeColorChanger.replaceCssText(code, options.build.matchColors, options.runtime.newColors)
+    var replacedCss = themeColorChanger.replaceCssText(code, option.matchColors, option.newColors)
 
     var replacedFn = path.join(__dirname, './dist/' + fn + '-replaced.css')
     fs.writeFileSync(replacedFn, replacedCss)
 
     //检查输出结果
-    testContent(code, outFile, false)
-    testContent(replacedCss, replacedFn, true)
+    testFn(code, outFile, false)
+    testFn(replacedCss, replacedFn, true)
 }
 
