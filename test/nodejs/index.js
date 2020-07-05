@@ -18,6 +18,8 @@ function startRun() {
 
     files = glob.sync(path.join(__dirname, 'output-by-webpack-dev/*.*'))
     files.map(file => extractOne(file, options.dev))
+
+    console.log('Test end.')
 }
 
 function extractOne(pathFn, option) {
@@ -30,7 +32,7 @@ function extractOne(pathFn, option) {
         isJsUgly: true,
     })
 
-    console.log('Output length:', code.length, '\t' + path.basename(outFile))
+    //console.log('Output length:', code.length, '\t' + path.basename(outFile))
 
     var replacedCss = themeColorChanger.replaceCssText(code, option.matchColors, option.newColors)
 
