@@ -113,7 +113,7 @@ module.exports = function AssetsExtractor(options) {
             if (process.env.npm_config_theme_debug) {
                 try {
                     if (extractor.testCssCode(src)) {
-                        var info = JSON.stringify(options) + '\n' + src
+                        var info = '/*var theme_cfg=' + JSON.stringify(options) + '*/\n' + src
                         fs.writeFileSync(path.join(process.cwd(), '_tmp_' + path.basename(fn)), info)
                     }
                 } catch (e) {
