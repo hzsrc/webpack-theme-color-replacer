@@ -4,22 +4,22 @@ module.exports = {
     dev: {
         isJsUgly: false,
         fileName: 'css/theme-colors-[contenthash:8].css',
-        matchColors: [
-            '#1890ff', '#2f9bff', '#46a6ff', '#5db1ff',
-            '#74bcff', '#8cc8ff', '#a3d3ff', '#badeff',
-            '#d1e9ff', '#e6f7ff', '#bae7ff', '#91d5ff',
-            '#69c0ff', '#40a9ff', '#1890ff', '#096dd9',
-            '#0050b3', '#003a8c', '#002766',
-            '24,144,255'
-        ],
         // matchColors: [
-        //     '#f67a17', '#f7872e', '#f89545', '#f9a25d',
-        //     '#faaf74', '#fbbd8b', '#fbcaa2', '#fcd7b9',
-        //     '#fde4d1', '#fff5e6', '#ffe2ba', '#ffce91',
-        //     '#ffb669', '#ff9c40', '#f67a17', '#cf5b08',
-        //     '#a84100', '#822e00', '#5c1d00',
-        //     '246,122,23'
+        //     '#1890ff', '#2f9bff', '#46a6ff', '#5db1ff',
+        //     '#74bcff', '#8cc8ff', '#a3d3ff', '#badeff',
+        //     '#d1e9ff', '#e6f7ff', '#bae7ff', '#91d5ff',
+        //     '#69c0ff', '#40a9ff', '#1890ff', '#096dd9',
+        //     '#0050b3', '#003a8c', '#002766',
+        //     '24,144,255'
         // ],
+        matchColors: [
+            '#f67a17', '#f7872e', '#f89545', '#f9a25d',
+            '#faaf74', '#fbbd8b', '#fbcaa2', '#fcd7b9',
+            '#fde4d1', '#fff5e6', '#ffe2ba', '#ffce91',
+            '#ffb669', '#ff9c40', '#f67a17', '#cf5b08',
+            '#a84100', '#822e00', '#5c1d00',
+            '246,122,23'
+        ],
         newColors: [
             '#bd3be7', '#c44fe9', '#ca62ec', '#d176ee',
             '#d789f1', '#de9df3', '#e5b1f5', '#ebc4f8',

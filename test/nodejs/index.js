@@ -11,14 +11,16 @@ var getElementUISeries = require('../../forElementUI/getElementUISeries')
 startRun()
 
 function startRun() {
+    glob.sync(path.join(__dirname, './dist/*.css')).map(file => fs.unlinkSync(file))
+
     var files = glob.sync(path.join(__dirname, 'output-by-webpack/*.*'))
-    files.map(file => extractOne(file, options.build, testContent.build))
+    files.map(file => extractOne(file, options.build))
 
     files = glob.sync(path.join(__dirname, 'output-by-webpack-dev/*.*'))
-    files.map(file => extractOne(file, options.dev, testContent.dev))
+    files.map(file => extractOne(file, options.dev))
 }
 
-function extractOne(pathFn, option, testFn) {
+function extractOne(pathFn, option) {
     var fn = path.basename(pathFn)
     var fileName = path.join(__dirname, './dist/' + fn + '.css')
     var { code, outFile } = nodeRun({
@@ -36,7 +38,8 @@ function extractOne(pathFn, option, testFn) {
     fs.writeFileSync(replacedFn, replacedCss)
 
     //检查输出结果
-    testFn(code, outFile, false)
-    testFn(replacedCss, replacedFn, true)
+    var rawSrc = fs.readFileSync(pathFn, 'utf-8');
+    testContent(rawSrc, code, outFile, option, false)
+    testContent(rawSrc, replacedCss, replacedFn, option, true)
 }
 

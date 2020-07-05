@@ -10,7 +10,7 @@ var option = require('../options').build
 var testContent = require('../testContent')
 
 var config = {
-    mode: 'development',
+    mode: 'production',
     entry: {
         'index': path.resolve(__dirname, './main.js'),
     },
@@ -61,11 +61,13 @@ function doWebpack() {
 function testReplaced() {
     var dir = 'test/webpack/dist/css'
     var cssFile = fs.readdirSync(dir)[0]
-    var cssText = fs.readFileSync(dir + '/' + cssFile, 'utf-8')
+    cssFile = path.resolve(dir + '/' + cssFile)
+    var cssText = fs.readFileSync(cssFile, 'utf-8')
     var replacedCss = client.changer.replaceCssText(cssText, option.matchColors, option.newColors)
-    var replacedFn = dir + '/test.css-replaced.css'
+    var replacedFn = path.resolve(dir + '/test.css-replaced.css')
     fs.writeFileSync(replacedFn, replacedCss)
 
-    testContent.build(cssText, cssFile, false)
-    testContent.build(replacedCss, replacedFn, true)
+    var srcRaw = fs.readFileSync('test/webpack/dist/index.js', 'utf-8');
+    testContent(srcRaw, cssText, cssFile, option, false)
+    testContent(srcRaw, replacedCss, replacedFn, option, true)
 }
