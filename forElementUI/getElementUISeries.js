@@ -8,6 +8,7 @@ module.exports = function (colorStr) {
     colors.push(varyColor.lighten(colorStr, 0.95));
     colors.push(varyColor.darken(colorStr, 0.1));
     colors.push(varyColor.darken(colorStr, 0.2));
+    colors.push(varyColor.rrggbbToHsl(colorStr));
 
     // colors.push(varyColor.rgbaToRgb(colorStr, 0.1)) // element-ui此处rgba实际是与白色混合，已重复
     // colors.push(varyColor.rgbaToRgb(colorStr, 0.2))

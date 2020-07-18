@@ -5,7 +5,9 @@ module.exports = {
     toNum3: toNum3,
     rgb: rgbaToRgb,
     rgbaToRgb: rgbaToRgb,
-    pad2: pad2
+    pad2: pad2,
+    rgbToHsl: rgbToHsl,
+    rrggbbToHsl: rrggbbToHsl
 };
 
 function pad2(num) {
@@ -46,6 +48,7 @@ function rgbaToRgb(colorStr, alpha, bgColorStr) {
     return mix(colorStr, bgColorStr || 'fff', 0.5, alpha, 1 - alpha)
 }
 
+
 function toNum3(colorStr) {
     colorStr = dropPrefix(colorStr)
     if (colorStr.length === 3) {
@@ -59,4 +62,29 @@ function toNum3(colorStr) {
 
 function dropPrefix(colorStr) {
     return colorStr.replace('#', '')
+}
+
+function rrggbbToHsl(rrggbb) {
+    var rgb = toNum3(rrggbb);
+    var hsl = rgbToHsl.apply(0, rgb);
+    return [hsl[0].toFixed(0), (hsl[1] * 100).toFixed(3) + '%', (hsl[2] * 100).toFixed(3) + '%'].join(',')
+}
+
+function rgbToHsl(r, g, b) {
+    var r_r = r / 255, r_g = g / 255, r_b = b / 255;
+
+    var max = Math.max(r_r, r_g, r_b), min = Math.min(r_r, r_g, r_b);
+    var delta = max - min, l = (max + min) / 2;
+    var h = 0, s = 0;
+    if (Math.abs(delta) > 0.00001) {
+        if (l <= 0.5) s = delta / (max + min);
+        else s = delta / (2 - max - min);
+        var r_dist = (max - r_r) / delta, g_dist = (max - r_g) / delta, b_dist = (max - r_b) / delta;
+        if (r_r == max) h = b_dist - g_dist;
+        else if (r_g == max) h = 2 + r_dist - b_dist;
+        else h = 4 + g_dist - r_dist;
+        h = h * 60;
+        if (h < 0) h += 360;
+    }
+    return [h, s, l]
 }

@@ -19,7 +19,7 @@ module.exports = {
     // ..... other config
     plugins: [
         new ThemeColorReplacer({
-            matchColors: ['#ed4040', '#4b0', '255,80,80'], // colors array for extracting css file
+            matchColors: ['#ed4040', '#4b0', '255,80,80', '27, 92.531%, 52.745%'], // colors array for extracting css file, support rgb and hsl.
             fileName: 'css/theme-colors-[contenthash:8].css', //optional. output css file name, suport [contenthash] and [hash].
             // resolveCss(resultCss) { // optional. Resolve result css code as you wish.
             //     return resultCss.replace(/#ccc/g, '#eee')
@@ -53,7 +53,7 @@ Otherwise, if you use other build tool(like gulp) but not webpack, you can use t
 var nodeRun = require('webpack-theme-color-replacer/src/nodeRun');
 var {code, outFile} = nodeRun({
     src: 'src/css/**/*.css', // source css files. string or string array, as `glob`.
-    matchColors: ['#ed4040', '#4b0', '255,80,80'],
+    matchColors: ['#ed4040', '#4b0', '255,80,80', '27, 92.531%, 52.745%'],
     fileName: 'css/theme-colors-[contenthash:8].css',
     // ...
 })
@@ -70,7 +70,7 @@ import client from 'webpack-theme-color-replacer/client'
 // change theme colors at runtime.
 export function changeColor() {
   var options = {
-    newColors: ['#f67a17', '#f67a17', '160,20,255'], // new colors array, one-to-one corresponde with `matchColors`
+    newColors: ['#f67a17', '#f67a17', '160,20,255', '285,78.182%,56.863%'], // new colors array, one-to-one corresponde with `matchColors`
     // appendToEl: 'head', //optional. The element selector for appending child with `<style>`, default is 'body'. Using `appendToEl: 'body'` can make the css priority higher than any css in <head>
     // changeUrl(cssUrl) {
     //   return `/${cssUrl}`; // while router is not `hash` mode, it needs absolute path

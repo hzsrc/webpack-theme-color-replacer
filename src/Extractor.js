@@ -7,7 +7,7 @@ var SubCssReg = /\s*>\s*/g // div > a 替换为 div>a
 
 module.exports = function Extractor(options) {
     var matchColorRegs = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
-        .map(c => new RegExp(c.replace(/,/g, ',\\s*'), 'i')); // 255, 255,3
+        .map(c => new RegExp(c.replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'i')); // 255, 255,3
 
     this.extractColors = function (src) {
         src = src.replace(Reg_Lf_Rem, '')

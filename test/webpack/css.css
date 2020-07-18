@@ -8,6 +8,11 @@
     color: rgba(246, 122, 23, 0.5);
 }
 
+.hsl {
+    background: hsl(27, 92.531%, 52.745%);
+    background: hsla(27, 92.531%, 52.745%, 0.5);
+}
+
 .c222 {
     color: #222
 }

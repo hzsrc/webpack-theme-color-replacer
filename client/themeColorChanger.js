@@ -80,8 +80,9 @@ module.exports = {
     },
     replaceCssText: function (cssText, oldColors, newColors) {
         oldColors.forEach(function (color, t) {
-            //#222、#222223、#22222350、222, 255,3 => #333、#333334、#33333450、211,133,53
-            cssText = cssText.replace(new RegExp(color.replace(/,/g, ',\\s*') + '([\\da-f]{2})?\\b', 'ig'), newColors[t] + '$1') // 255, 255,3
+            //#222、#222223、#22222350、222, 255,3 => #333、#333334、#33333450、211,133,53、hsl(27, 92.531%, 52.745%)
+            var reg = new RegExp(color.replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'ig')
+            cssText = cssText.replace(reg, newColors[t] + '$1$2') // 255, 255,3
         })
         return cssText
     },

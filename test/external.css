@@ -24,3 +24,8 @@
     color: #fff;
     background-color: #f67a17
 }
+
+.hsl-ex {
+    background: hsl(27, 92.531%, 52.745% );
+    background: hsla(27, 92.531%, 52.745% , 0.5);
+}
