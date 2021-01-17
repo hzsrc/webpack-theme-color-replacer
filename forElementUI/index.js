@@ -15,6 +15,10 @@ function changeSelector(selector, util) {
             return util.changeEach(selector, '.el-button--default')
         case '.el-pagination button:hover':
             return selector + ':not(:disabled)'
+        case '.el-pagination.is-background .el-pager li:not(.disabled):hover':
+            return selector + ':not(.active)'
+        case '.el-tag':
+            return selector + ':not(.el-tag--dark)'
         default:
             return selector
     }
