@@ -5,6 +5,7 @@
 .rgba {
     color: #f67a1780;
     background: rgb(246, 122, 23);
+    transform: scale3d(246, 122, 23);
     color: rgba(246, 122, 23, 0.5);
 }
 

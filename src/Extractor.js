@@ -4,6 +4,7 @@ var Reg_Lf_Rem = /\\\\?n|\n|\\\\?r|\/\*[\s\S]+?\*\//g
 var SpaceReg = /\s+/g
 var TrimReg = /(^|,)\s+|\s+($)/g; //前空格，逗号后的空格; 后空格
 var SubCssReg = /\s*>\s*/g // div > a 替换为 div>a
+//var ExclueCssReg = /(?:scale3d|translate3d|rotate3d|matrix3d)\s*\(/i;
 
 module.exports = function Extractor(options) {
     var matchColorRegs = options.matchColors // ['#409EFF', '#409eff', '#53a8ff', '#66b1ff', '#79bbff', '#8cc5ff', '#a0cfff', '#b3d8ff', '#c6e2ff', '#d9ecff', '#ecf5ff', '#3a8ee6', '#337ecc']
@@ -91,7 +92,7 @@ module.exports = function Extractor(options) {
 
     this.testCssCode = function (cssCode) {
         for (var colorReg of matchColorRegs) {
-            if (colorReg.test(cssCode)) return true
+            if (colorReg.test(cssCode)) return true // && !ExclueCssReg.test(cssCode)
         }
         return false
     }

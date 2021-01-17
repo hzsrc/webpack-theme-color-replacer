@@ -129,6 +129,16 @@ Optional. Change the theme-color-css download url if you need. While router is n
 # issues report
 If you have issues with this plugin, please run your command with `--theme_debug` option, such as `npm run dev --theme_debug`, then upload the outputed `_tmp_xxx` files while reporting issues. Thanks!
 
-#  update log
+#  update log (fixed bugs not listed)
 ### 1.3.2
-Default to append `<style>...</style>` to `<body>`, not to `<head>` any more, in order to resolve most priority problems in lazy loading pages. Thanks to [iota9star](https://github.com/iota9star) : [15](https://github.com/hzsrc/webpack-theme-color-replacer/issues/15)
+* Default to append `<style>...</style>` to `<body>`, not to `<head>` any more, in order to resolve most priority problems in lazy loading pages. Thanks to [iota9star](https://github.com/iota9star) : [15](https://github.com/hzsrc/webpack-theme-color-replacer/issues/15)
+
+### 1.3.4
+* Support running without webpack, just with nodejs, such as like `gulp`.
+
+### 1.3.12
+* HotModuleReplacement performance improved.
+
+### 1.3.14
+* hsl(a) colors format supported.
+
