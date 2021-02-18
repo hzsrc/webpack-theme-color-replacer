@@ -52,7 +52,7 @@ module.exports = class Handler {
         Object.keys(entrypoints).forEach(entryName => {
             var entryAssets = entrypoints[entryName].assets
             for (var i = 0, l = entryAssets.length; i < l; i++) {
-                var assetName = entryAssets[i]
+                var assetName = entryAssets[i].name || entryAssets[i];
                 if (assetName.slice(-3) === '.js' && assetName.indexOf('manifest.') === -1) { //
                     var assetSource = compilation.assets[assetName]
                     if (assetSource && !assetSource._isThemeJsInjected) {
