@@ -30,7 +30,7 @@ module.exports = class Handler {
         this.addToEntryJs(outputName, compilation, output)
 
         function getFileName(fileName, src) {
-            return replaceFileName(compilation.getPath(fileName, {}), src)
+            return compilation.getPath(replaceFileName(fileName, src), {})
         }
     }
 
