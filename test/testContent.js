@@ -28,7 +28,7 @@ function getContainedColors(srcRaw, option, isNewColor) {
 }
 
 function getReg(color) {
-    return new RegExp(color.replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'ig')
+    return new RegExp(color.replace(/\s/g,'').replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'ig')
 }
 
 function test(src, file, colorRegs) {

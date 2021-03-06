@@ -64,7 +64,7 @@ function testReplaced() {
     cssFile = path.resolve(dir + '/' + cssFile)
     var cssText = fs.readFileSync(cssFile, 'utf-8')
     var replacedCss = client.changer.replaceCssText(cssText, option.matchColors, option.newColors)
-    var replacedFn = path.resolve(dir + '/test.css-replaced.css')
+    var replacedFn = path.resolve(dir + '/test-dev.css-replaced.css')
     fs.writeFileSync(replacedFn, replacedCss)
 
     var srcRaw = fs.readFileSync('test/webpack/dist/index.js', 'utf-8');
