@@ -37,6 +37,8 @@ var config = {
 }
 
 
+//require('rimraf')(config.output.path, e => !e && doWebpack())
+//config.mode = 'development'
 require('rimraf')(config.output.path, e => !e && doWebpack())
 
 function doWebpack() {
