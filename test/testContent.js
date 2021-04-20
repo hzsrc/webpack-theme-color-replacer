@@ -1,9 +1,12 @@
 var path = require('path');
 var baseDir = path.resolve('.');
 module.exports = function (srcRaw, src, outputFile, option, isNewColor) {
-    if (src === '') return console.error('Failed: File is Empty.\t' + outputFile)
+    if (src === '') {
+        console.error('Failed: File is Empty.\t' + outputFile)
+        return false
+    }
     var colorRegs = getContainedColors(srcRaw, option, isNewColor);
-    test(src, outputFile, colorRegs)
+    return colorRegs.length > 0 && test(src, outputFile, colorRegs)
 }
 
 //自动生成需要校验的颜色值
@@ -28,18 +31,21 @@ function getContainedColors(srcRaw, option, isNewColor) {
 }
 
 function getReg(color) {
-    return new RegExp(color.replace(/\s/g,'').replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'ig')
+    return new RegExp(color.replace(/\s/g, '').replace(/,/g, ',\\s*') + '([\\da-f]{2})?(\\b|\\)|,|\\s)', 'ig')
 }
 
 function test(src, file, colorRegs) {
+    var ok = true;
     colorRegs.forEach(reg => {
         reg.lastIndex = 0;
 
         var fn = file.substr(baseDir.length + 1)
         if (!reg.test(src)) {
+            ok = false
             console.error(`Failed: ${reg} not matched ${fn}.`)
         }// else {
         //    console.log('OK.', reg, fn);
         //}
     })
+    return ok
 }

@@ -14,12 +14,13 @@ function startRun() {
     glob.sync(path.join(__dirname, './dist/*.css')).map(file => fs.unlinkSync(file))
 
     var files = glob.sync(path.join(__dirname, 'output-by-webpack/*.*'))
-    files.map(file => extractOne(file, options.build))
+    var ok1 = files.map(file => extractOne(file, options.build)).every(ok => ok)
 
     files = glob.sync(path.join(__dirname, 'output-by-webpack-dev/*.*'))
-    files.map(file => extractOne(file, options.dev))
+    var ok2 = files.map(file => extractOne(file, options.dev)).every(ok => ok)
 
     console.log('Test end.')
+    process.exit(ok1 && ok2 ? 0 : 1)
 }
 
 function extractOne(pathFn, option) {
@@ -41,7 +42,8 @@ function extractOne(pathFn, option) {
 
     //检查输出结果
     var rawSrc = fs.readFileSync(pathFn, 'utf-8');
-    testContent(rawSrc, code, outFile, option, false)
-    testContent(rawSrc, replacedCss, replacedFn, option, true)
+    var ok1 = testContent(rawSrc, code, outFile, option, false)
+    var ok2 = testContent(rawSrc, replacedCss, replacedFn, option, true)
+    return ok1 && ok2
 }
 
