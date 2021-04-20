@@ -4,11 +4,10 @@ var theme_COLOR_config;
 module.exports = {
     _tryNum: 0,
     changeColor: function (options, promiseForIE) {
-        var win = window
-        var Promise = promiseForIE || win.Promise
+        var Promise = promiseForIE || win().Promise
         var _this = this;
         if (!theme_COLOR_config) {
-            theme_COLOR_config = win.__theme_COLOR_cfg
+            theme_COLOR_config = win().__theme_COLOR_cfg
             var later = retry()
             //重试直到theme_COLOR_config加载
             if (later) return later
@@ -87,10 +86,10 @@ module.exports = {
         return cssText
     },
     getCssString: function (url, resolve, reject) {
-        var css = window.__theme_COLOR_css
+        var css = win().__theme_COLOR_css
         if (css) {
             // css已内嵌在js中
-            window.__theme_COLOR_css = ''
+            win().__theme_COLOR_css = ''
             resolve(css)
             return
         }
@@ -115,7 +114,9 @@ module.exports = {
         xhr.send()
     },
 }
-
+function win(){
+    return typeof window === 'undefined' ? global : window
+}
 function isSameArr(oldColors, newColors) {
     if (oldColors.length !== newColors.length) {
         return false
