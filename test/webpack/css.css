@@ -1625,3 +1625,8 @@ table {
 ::-webkit-scrollbar-thumb:vertical {
     background: linear-gradient(90deg, #e3b68f, #ffe3a6 48%, #e3b68f)
 }
+
+.c222 {
+    color: #222;
+    border: 1px #ADF solid;;
+}
