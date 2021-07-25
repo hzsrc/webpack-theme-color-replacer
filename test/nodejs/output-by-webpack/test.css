@@ -1,10 +1,10 @@
 .test-class {
-    color: #faaf74;
+    background: url('data:image/svg+xml;base64,PHN2') #faaf74;
 }
 
 .rgba {
     color: #f67a1780;
-    background: rgb(246, 122, 23);
+    background: rgb(246, 122, 23) url("data:image/svg+xml;base64,PHN2");
     color: rgba(246, 122, 23, 0.5);
 }
 
