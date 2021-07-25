@@ -1,5 +1,5 @@
 .test-class {
-    color: #faaf74;
+    background: url('data:image/svg+xml;base64,PHN3') #faaf74;
 }
 
 .rgba {
@@ -15,7 +15,7 @@
 }
 
 .c222 {
-    color: #222
+    background: #222 url("data:image/svg+xml;base64,PHN2")
 }
 
 .c222223 {

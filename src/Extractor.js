@@ -4,7 +4,8 @@ var Reg_Lf_Rem = /\\\\?n|\n|\\\\?r|\/\*[\s\S]+?\*\//g
 var SpaceReg = /\s+/g
 var TrimReg = /(^|,)\s+|\s+($)/g; //前空格，逗号后的空格; 后空格
 var SubCssReg = /\s*>\s*/g // div > a 替换为 div>a
-var DataUrlReg = /url\s*\(['"\s]*data:/ //url("data:image/svg+xml;base64,PHN2")
+var DataUrlReg = /url\s*\([\\'"\s]*data:/ //url("data:image/svg+xml;base64,PHN2")
+var QuotReg = /\\+(['"])/g
 //var ExclueCssReg = /(?:scale3d|translate3d|rotate3d|matrix3d)\s*\(/i;
 
 module.exports = function Extractor(options) {
@@ -84,9 +85,10 @@ module.exports = function Extractor(options) {
         var rules = cssCode.split(';')
         var ret = []
         for (var i = 0; i < rules.length; i++) {
-            var rule =rules[i]
-            if( rule.match(DataUrlReg)) {
-                rule += ';' + rules[i+1]
+            var rule = rules[i]
+            if (rule.match(DataUrlReg)) {
+                rule += ';' + rules[i + 1]
+                rule = rule.replace(QuotReg, '$1')
                 i++;
             }
             if (this.testCssCode(rule)) {
