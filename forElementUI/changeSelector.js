@@ -1,4 +1,4 @@
-function changeSelector(selector, util) {
+module.exports = function changeSelector(selector, util) {
     // element-ui这几个样式太宽泛，需减小范围
     switch (selector) {
         case '.el-button:active':
