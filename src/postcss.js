@@ -1,18 +1,27 @@
 var postcss = require('postcss')
 var rule = require('./extractRule.js')
-var defaults = { t: 1 }
+var defaults = {}
 
 module.exports = postcss.plugin('theme-color-replacer', options => {
     const opts = Object.assign({}, defaults, options);
     var testCssCode = rule.makeTester(opts)
     return css => {
-        console.log(3, css.source.input.file)
-        var nodes = []
-        css.walkDecls((decl, i) => {
-            if (testCssCode(decl.value)) nodes.push(decl)
+        var rules = []
+        // css.walkDecls((decl, i) => {
+        //     if (testCssCode(decl.value)) nodes.push(decl)
+        // })
+        css.walk(rule => {
+            if (rule.type === 'rule') {
+                var filtered = rule.nodes.filter(node => {
+                    return testCssCode(node.value)
+                })
+                if (filtered.length) {
+                    rules.push({ selector: rule.selector, nodes: filtered })
+                }
+            }
         })
-        var vals = nodes.map(n => n.name + ':' + n.value).join(';')
-        rule.cssFormPostCss = '{' + vals + '}'
+        if (!rule.cssFormPostCss) rule.cssFormPostCss = [];
+        [].push.apply(rule.cssFormPostCss, rules)
     };
 });
 

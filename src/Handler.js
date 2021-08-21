@@ -15,11 +15,14 @@ module.exports = class Handler {
         }, options);
     }
 
-    handle(compilation) {debugger
+    handle(compilation) {
         var output = rule.cssFormPostCss;
         if (output === undefined) {
             if (!this.assetsExtractor) this.assetsExtractor = new AssetsExtractor(this.options)
             output = this.assetsExtractor.extractAssets(compilation.assets);
+        } else {
+            output.map(rule => rule.selector + '{' + rule.nodes.map(n => n.prop + ':' + n.value).join(';') + '}')
+            var nodes = output.rule.cssFormPostCss += rules.join('\n')
         }
         console.log('Extracted theme color css content length: ' + output.length);
 
