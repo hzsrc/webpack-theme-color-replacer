@@ -56,7 +56,8 @@ function doWebpack() {
 
         console.log('  Build complete.\n')
 
-        testReplaced();
+        var ok = testReplaced();
+        if (!ok) process.exit(1)
     })
 }
 
@@ -70,6 +71,7 @@ function testReplaced() {
     fs.writeFileSync(replacedFn, replacedCss)
 
     var srcRaw = fs.readFileSync('test/webpack/dist/index.js', 'utf-8');
-    testContent(srcRaw, cssText, cssFile, option, false)
-    testContent(srcRaw, replacedCss, replacedFn, option, true)
+    var okRaw = testContent(srcRaw, cssText, cssFile, option, false)
+    var okNew = testContent(srcRaw, replacedCss, replacedFn, option, true)
+    return okRaw && okNew
 }
