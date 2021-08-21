@@ -146,7 +146,7 @@ If you have issues with this plugin, please run your command with `--theme_debug
 ### 1.3.25
 * Add `themeUtil` tool which can make color series both at 
 [webpack-config](https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webpack.base.conf.js)
- and [runtime](https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/build/webpack.base.conf.js).   
+ and [runtime](https://github.com/hzsrc/vue-element-ui-scaffold-webpack4/blob/master/src/js/themeColorClient.js).   
 
 * `getElementUISeries` returns all 1-9 darken colors. 
 
