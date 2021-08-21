@@ -1,8 +1,9 @@
 'use strict';
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
-var {ConcatSource} = require('webpack-sources');
+var { ConcatSource } = require('webpack-sources');
 var LineReg = /\n/g
+var rule = require('./extractRule')
 
 module.exports = class Handler {
     constructor(options) {
@@ -12,11 +13,14 @@ module.exports = class Handler {
             matchColors: [],
             isJsUgly: !(process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/))),
         }, options);
-        this.assetsExtractor = new AssetsExtractor(this.options)
     }
 
-    handle(compilation) {
-        var output = this.assetsExtractor.extractAssets(compilation.assets);
+    handle(compilation) {debugger
+        var output = rule.cssFormPostCss;
+        if (output === undefined) {
+            if (!this.assetsExtractor) this.assetsExtractor = new AssetsExtractor(this.options)
+            output = this.assetsExtractor.extractAssets(compilation.assets);
+        }
         console.log('Extracted theme color css content length: ' + output.length);
 
         //Add to assets for output
@@ -64,7 +68,7 @@ module.exports = class Handler {
     }
 
     getEntryJs(outputName, assetSource, cssCode) {
-        var config = {url: outputName, colors: this.options.matchColors}
+        var config = { url: outputName, colors: this.options.matchColors }
         var configJs = '\n(typeof window==\'undefined\'?global:window).__theme_COLOR_cfg=' + JSON.stringify(config) + ';\n'
         if (this.options.injectCss) {
             configJs = configJs + '(typeof window==\'undefined\'?global:window).__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'

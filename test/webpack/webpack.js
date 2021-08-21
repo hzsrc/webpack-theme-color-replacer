@@ -6,7 +6,7 @@ var webpack = require('webpack')
 var ThemeColorReplacer = require('../../src')
 var client = require('../../client')
 
-var option = require('../options').build
+var options = require('../options').build
 var testContent = require('../testContent')
 
 var config = {
@@ -21,16 +21,21 @@ var config = {
     module: {
         rules: [{
             test: /\.css$/,
-            loader: 'css-loader',
+            use: ['css-loader', {
+                loader: 'postcss-loader',
+                options: {
+                    plugins: [ThemeColorReplacer.postcss(options)]
+                }
+            }]
         }]
     },
 
-    plugins: [new ThemeColorReplacer(option)],
+    plugins: [new ThemeColorReplacer(options)],
     optimization: {
         runtimeChunk: {
             name: 'manifest'
         },
-        minimize: option.isJsUgly,
+        minimize: options.isJsUgly,
         noEmitOnErrors: true,
         splitChunks: false
     }
@@ -65,11 +70,11 @@ function testReplaced() {
     var cssFile = fs.readdirSync(dir)[0]
     cssFile = path.resolve(dir + '/' + cssFile)
     var cssText = fs.readFileSync(cssFile, 'utf-8')
-    var replacedCss = client.changer.replaceCssText(cssText, option.matchColors, option.newColors)
+    var replacedCss = client.changer.replaceCssText(cssText, options.matchColors, options.newColors)
     var replacedFn = path.resolve(dir + '/test-dev.css-replaced.css')
     fs.writeFileSync(replacedFn, replacedCss)
 
     var srcRaw = fs.readFileSync('test/webpack/dist/index.js', 'utf-8');
-    testContent(srcRaw, cssText, cssFile, option, false)
-    testContent(srcRaw, replacedCss, replacedFn, option, true)
+    testContent(srcRaw, cssText, cssFile, options, false)
+    testContent(srcRaw, replacedCss, replacedFn, options, true)
 }

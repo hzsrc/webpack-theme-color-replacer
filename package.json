@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node test/nodejs/index.js",
     "webpack": "node test/webpack/webpack.js",
+    "postcss": "node test/nodejs/postcss.js",
     "debug": "npm run webpack --theme_debug",
     "prepublish": "npm test"
   },
@@ -15,9 +16,11 @@
   "devDependencies": {
     "css-loader": "^3.6.0",
     "glob": "^7.1.3",
+    "mkdirp": "^0.5.1",
+    "postcss": "4.*",
+    "postcss-loader": "4.0",
     "rimraf": "^2.6.3",
-    "webpack": "4.*",
-    "mkdirp": "^0.5.1"
+    "webpack": "4.*"
   },
   "keywords": [
     "webpack",

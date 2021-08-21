@@ -26,5 +26,6 @@ class ThemeColorReplacer {
 }
 
 ThemeColorReplacer.varyColor = require('../client/varyColor');
+ThemeColorReplacer.postcss = require('./postcss');
 
 module.exports = ThemeColorReplacer;
