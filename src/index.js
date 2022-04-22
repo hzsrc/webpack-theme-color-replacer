@@ -6,6 +6,7 @@ var randomId = Date.now() + '_' + Math.floor(Math.random()*1000)
 
 class ThemeColorReplacer {
     constructor(options) {
+        options.randomId = randomId;
         this.handler = new Handler(options)
     }
 
