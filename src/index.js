@@ -1,6 +1,9 @@
 'use strict';
 var Handler = require('./Handler')
 
+var webpack = require('webpack')
+var randomId = Date.now() + '_' + Math.floor(Math.random()*1000)
+
 class ThemeColorReplacer {
     constructor(options) {
         this.handler = new Handler(options)
@@ -18,6 +21,11 @@ class ThemeColorReplacer {
         //     debugger
         //   })
         // });
+
+        new webpack.DefinePlugin({
+            THEME_RANDOM_ID: JSON.stringify(randomId)
+        }).apply(compiler)
+
         this.getBinder(compiler, 'emit')((compilation, callback) => {
             this.handler.handle(compilation)
             callback()
