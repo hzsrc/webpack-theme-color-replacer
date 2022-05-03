@@ -65,9 +65,9 @@ module.exports = class Handler {
 
     getEntryJs(outputName, assetSource, cssCode) {
         var config = {url: outputName, colors: this.options.matchColors}
-        var configJs = '\n(typeof window==\'undefined\'?global:window).__theme_COLOR_cfg=' + JSON.stringify(config) + ';\n'
+        var configJs = '\n(typeof window==\'undefined\'?global:window).__theme_COLOR_cfg_' + this.options.randomId + '=' + JSON.stringify(config) + ';\n'
         if (this.options.injectCss) {
-            configJs = configJs + '(typeof window==\'undefined\'?global:window).__theme_COLOR_css=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'
+            configJs = configJs + '(typeof window==\'undefined\'?global:window).__theme_COLOR_css_' + this.options.randomId + '=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'
         }
         return new ConcatSource(assetSource, configJs)
     }
