@@ -114,6 +114,10 @@ Optional. Inject css text into js file, no need to download `theme-colors-xxx.cs
 #### * isJsUgly: boolean
 Optional. Default value: process.env.NODE_ENV !== 'development'. Set to `true` if your js is uglified. Default is set by process.env.NODE_ENV.
 
+#### * configVar: string
+Optional.  to set custom var name, instead of `theme_COLOR_cfg` or `tc_cfg_xxxxxx`. Default is an random name which start with 'tc_cfg_'.
+
+
 # Options for runtime
 These options are used for `client.changer.changeColor(options)`
 
@@ -150,3 +154,6 @@ If you have issues with this plugin, please run your command with `--theme_debug
 
 * `getElementUISeries` returns all 1-9 darken colors. 
 
+### 1.4.1
+* Replace `__theme_COLOR_cfg` to a random variable name, remove `__theme_COLOR_css` variable, to resolve name collision problems: https://github.com/hzsrc/webpack-theme-color-replacer/pull/103/
+* Add a build option: `configVar`, to set your variable name.

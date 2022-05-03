@@ -2,11 +2,9 @@
 var Handler = require('./Handler')
 
 var webpack = require('webpack')
-var randomId = Date.now() + '_' + Math.floor(Math.random()*1000)
 
 class ThemeColorReplacer {
     constructor(options) {
-        options.randomId = randomId;
         this.handler = new Handler(options)
     }
 
@@ -24,9 +22,8 @@ class ThemeColorReplacer {
         // });
 
         new webpack.DefinePlugin({
-            THEME_RANDOM_ID: JSON.stringify(randomId)
+            WP_THEME_CONFIG: JSON.stringify(this.handler.options.configVar)
         }).apply(compiler)
-
         this.getBinder(compiler, 'emit')((compilation, callback) => {
             this.handler.handle(compilation)
             callback()

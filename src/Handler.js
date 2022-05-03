@@ -1,7 +1,7 @@
 'use strict';
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
-var {ConcatSource} = require('webpack-sources');
+var { ConcatSource } = require('webpack-sources');
 var LineReg = /\n/g
 
 module.exports = class Handler {
@@ -11,6 +11,7 @@ module.exports = class Handler {
             fileName: 'css/theme-colors-[contenthash:8].css',
             matchColors: [],
             isJsUgly: !(process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/))),
+            configVar: 'tc_cfg_' + Math.random().toString().slice(2),
         }, options);
         this.assetsExtractor = new AssetsExtractor(this.options)
     }
@@ -64,11 +65,12 @@ module.exports = class Handler {
     }
 
     getEntryJs(outputName, assetSource, cssCode) {
-        var config = {url: outputName, colors: this.options.matchColors}
-        var configJs = '\n(typeof window==\'undefined\'?global:window).__theme_COLOR_cfg_' + this.options.randomId + '=' + JSON.stringify(config) + ';\n'
+        var config = { url: outputName, colors: this.options.matchColors }
         if (this.options.injectCss) {
-            configJs = configJs + '(typeof window==\'undefined\'?global:window).__theme_COLOR_css_' + this.options.randomId + '=' + JSON.stringify(cssCode.replace(LineReg, '')) + ';\n'
+            config.cssCode = cssCode.replace(LineReg, '');
         }
+        var configJs = '\n(typeof window==\'undefined\'?global:window).' + this.options.configVar + '=' + JSON.stringify(config) + ';\n'
+
         return new ConcatSource(assetSource, configJs)
     }
 }

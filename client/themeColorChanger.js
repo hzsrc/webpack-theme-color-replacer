@@ -7,7 +7,7 @@ module.exports = {
         var Promise = promiseForIE || win().Promise
         var _this = this;
         if (!theme_COLOR_config) {
-            theme_COLOR_config = win()['__theme_COLOR_cfg_' + THEME_RANDOM_ID]
+            theme_COLOR_config = win()[WP_THEME_CONFIG]
             var later = retry()
             //重试直到theme_COLOR_config加载
             if (later) return later
@@ -86,10 +86,9 @@ module.exports = {
         return cssText
     },
     getCssString: function (url, resolve, reject) {
-        var css = win()['__theme_COLOR_css_' + THEME_RANDOM_ID]
-        if (css) {
-            // css已内嵌在js中
-            win()['__theme_COLOR_css_' + THEME_RANDOM_ID] = ''
+        var css = theme_COLOR_config.cssCode
+        if (css) { // css已内嵌在js中
+            theme_COLOR_config.cssCode = ''
             resolve(css)
             return
         }
