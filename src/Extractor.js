@@ -1,5 +1,5 @@
 // \n和备注
-var Reg_Lf_Rem = /\\\\?n|\n|\\\\?r|\/\*[\s\S]+?\*\//g
+var Reg_Lf_Rem = /\\\\?n|\n|\\\\?t|\\\\?r|\/\*[\s\S]+?\*\//g
 
 var SpaceReg = /\s+/g
 var TrimReg = /(^|,)\s+|\s+($)/g; //前空格，逗号后的空格; 后空格
