@@ -28,10 +28,40 @@ module.exports = class Handler {
         };
 
         // 记录动态的文件名，到每个入口
-        this.addToEntryJs(outputName, compilation, output)
+        // this.addToEntryJs(outputName, compilation, output)
+        // 解决 webpack splitchunks导致chunk缓存不生效问题
+        this.addToHtml(outputName, compilation, output);
 
         function getFileName(fileName, src) {
             return compilation.getPath(replaceFileName(fileName, src), {})
+        }
+    }
+    addToHtml(outputName, compilation, cssCode) {
+        const assetsNames = Object.keys(compilation.assets).filter((assetName) => {
+          return /\index\.html$/i.test(assetName);
+        });
+    
+        if (assetsNames.length > 0) {
+          let name = assetsNames[0];
+          let source = compilation.assets[name];
+          let content = source.source();
+          let config = { url: outputName, colors: this.options.matchColors };
+          let configJs =
+            "\n(typeof window=='undefined'?global:window).__theme_COLOR_cfg=" +
+            JSON.stringify(config) +
+            ";\n";
+          content = content.replace(
+            "</head>",
+            `<script> ${configJs}</script></head>`
+          );
+          delete compilation.assets[name];
+          compilation.assets[name] = {
+            source: () => content,
+            name,
+            size: () => {
+              return Buffer.byteLength(content, "utf8");
+            },
+          };
         }
     }
 
