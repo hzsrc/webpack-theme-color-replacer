@@ -117,8 +117,8 @@ Optional. Default value: process.env.NODE_ENV !== 'development'. Set to `true` i
 #### * configVar: string
 Optional.  to set custom var name, instead of `theme_COLOR_cfg` or `tc_cfg_xxxxxx`. Default is an random name which start with 'tc_cfg_'.
 
-#### * injectToHtml: Regex | true
-Optional.  Injecting config-code into html files instead of injecting into entry js files. Use a Regex to check which files to be injected to. `true` is the same as `/index\.html?$/i`.
+#### * injectToHtml: RegExp | true
+Optional.  Injecting config-code into html files instead of injecting into entry js files. Use a RegExp to check which files to be injected to. `true` is the same as `/index\.html?$/i`.
 
 
 # Options for runtime
