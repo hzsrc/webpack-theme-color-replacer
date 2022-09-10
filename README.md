@@ -122,7 +122,7 @@ Optional.  Injecting config-code into html files instead of injecting into entry
 
 
 # Options for runtime
-These options are used for `client.changer.changeColor(options)`
+These options are used for `client.changer.changeColor(options)`, which imports `client/index.js`.
 
 #### * newColors: Array&lt;string>
 New colors array for changing, one-to-one corresponde with `matchColors`.
@@ -163,4 +163,4 @@ If you have issues with this plugin, please run your command with `--theme_debug
 * <font color="red">Note: need to use `webpack.DefinePlugin` in webpack.</font>
 
 ### 1.4.2
-Add `injectToHtml` option.
+Add `injectToHtml` option. 

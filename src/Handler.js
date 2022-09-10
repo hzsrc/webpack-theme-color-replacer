@@ -48,11 +48,10 @@ module.exports = class Handler {
             return injectToHtmlReg.test(assetName);
         });
 
-        if (assetsNames[0]) {
-            var name = assetsNames[0];
+        assetsNames.map(name => {
             var source = compilation.assets[name];
             var configJs = this.getConfigJs(outputName, cssCode)
-            var content = source.source().replace(/\<\/head>/i, '<script>' + configJs + '</script></head>');
+            var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
             delete compilation.assets[name];
             compilation.assets[name] = {
                 source: () => content,
@@ -61,7 +60,7 @@ module.exports = class Handler {
                     return Buffer.byteLength(content, 'utf8');
                 },
             };
-        }
+        });
     }
 
 // 自动注入js代码，设置css文件名
