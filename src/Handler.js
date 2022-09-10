@@ -27,41 +27,40 @@ module.exports = class Handler {
             size: () => output.length
         };
 
-        // 记录动态的文件名，到每个入口
-        // this.addToEntryJs(outputName, compilation, output)
-        // 解决 webpack splitchunks导致chunk缓存不生效问题
-        this.addToHtml(outputName, compilation, output);
+        var injectToHtmlReg = this.options.injectToHtml;
+        if (injectToHtmlReg) {
+            //injectToHtml配置一个正则表达式或true
+            if (!injectToHtmlReg.test) injectToHtmlReg = /index\.html?$/i
+            // 解决 webpack splitchunks导致chunk缓存不生效问题
+            this.addToHtml(outputName, compilation, output, injectToHtmlReg);
+        } else {
+            // 记录动态的文件名，到每个入口js
+            this.addToEntryJs(outputName, compilation, output)
+        }
 
         function getFileName(fileName, src) {
             return compilation.getPath(replaceFileName(fileName, src), {})
         }
     }
-    addToHtml(outputName, compilation, cssCode) {
-        const assetsNames = Object.keys(compilation.assets).filter((assetName) => {
-          return /\index\.html$/i.test(assetName);
+
+    addToHtml(outputName, compilation, cssCode, injectToHtmlReg) {
+        var assetsNames = Object.keys(compilation.assets).filter((assetName) => {
+            return injectToHtmlReg.test(assetName);
         });
-    
-        if (assetsNames.length > 0) {
-          let name = assetsNames[0];
-          let source = compilation.assets[name];
-          let content = source.source();
-          let config = { url: outputName, colors: this.options.matchColors };
-          let configJs =
-            "\n(typeof window=='undefined'?global:window).__theme_COLOR_cfg=" +
-            JSON.stringify(config) +
-            ";\n";
-          content = content.replace(
-            "</head>",
-            `<script> ${configJs}</script></head>`
-          );
-          delete compilation.assets[name];
-          compilation.assets[name] = {
-            source: () => content,
-            name,
-            size: () => {
-              return Buffer.byteLength(content, "utf8");
-            },
-          };
+
+        if (assetsNames[0]) {
+            var name = assetsNames[0];
+            var source = compilation.assets[name];
+            var configJs = this.getConfigJs(outputName, cssCode)
+            var content = source.source().replace(/\<\/head>/i, '<script>' + configJs + '</script></head>');
+            delete compilation.assets[name];
+            compilation.assets[name] = {
+                source: () => content,
+                name,
+                size: () => {
+                    return Buffer.byteLength(content, 'utf8');
+                },
+            };
         }
     }
 
@@ -94,13 +93,16 @@ module.exports = class Handler {
         })
     }
 
-    getEntryJs(outputName, assetSource, cssCode) {
+    getConfigJs(outputName, cssCode) {
         var config = { url: outputName, colors: this.options.matchColors }
         if (this.options.injectCss) {
             config.cssCode = cssCode.replace(LineReg, '');
         }
-        var configJs = '\n(typeof window==\'undefined\'?global:window).' + this.options.configVar + '=' + JSON.stringify(config) + ';\n'
+        return '\n(typeof window==\'undefined\'?global:window).' + this.options.configVar + '=' + JSON.stringify(config) + ';\n'
+    }
 
+    getEntryJs(outputName, assetSource, cssCode) {
+        var configJs = this.getConfigJs(outputName, cssCode)
         return new ConcatSource(assetSource, configJs)
     }
 }

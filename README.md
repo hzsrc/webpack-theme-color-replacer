@@ -117,6 +117,9 @@ Optional. Default value: process.env.NODE_ENV !== 'development'. Set to `true` i
 #### * configVar: string
 Optional.  to set custom var name, instead of `theme_COLOR_cfg` or `tc_cfg_xxxxxx`. Default is an random name which start with 'tc_cfg_'.
 
+#### * injectToHtml: Regex | true
+Optional.  Injecting config-code into html files instead of injecting into entry js files. Use a Regex to check which files to be injected to. `true` is the same as `/index\.html?$/i`.
+
 
 # Options for runtime
 These options are used for `client.changer.changeColor(options)`
@@ -157,3 +160,7 @@ If you have issues with this plugin, please run your command with `--theme_debug
 ### 1.4.1
 * Replace `__theme_COLOR_cfg` to a random variable name, remove `__theme_COLOR_css` variable, to resolve name collision problems: https://github.com/hzsrc/webpack-theme-color-replacer/pull/103/
 * Add a build option: `configVar`, to set your variable name.
+* <font color="red">Note: need to use `webpack.DefinePlugin` in webpack.</font>
+
+### 1.4.2
+Add `injectToHtml` option.
