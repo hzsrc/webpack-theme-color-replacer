@@ -164,3 +164,6 @@ If you have issues with this plugin, please run your command with `--theme_debug
 
 ### 1.4.2
 Add `injectToHtml` option. 
+
+### 1.4.3
+* Add `client/client.browser.js` for browser using like `<script src="client.browser.js"></script>`, with a global var `tcrClient`.
