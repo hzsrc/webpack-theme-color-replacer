@@ -1,4 +1,5 @@
 'use strict';
+var webpack = require('webpack')
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
 var { ConcatSource } = require('webpack-sources');
@@ -15,17 +16,26 @@ module.exports = class Handler {
         }, options);
         this.assetsExtractor = new AssetsExtractor(this.options)
     }
-
-    handle(compilation) {
+    
+    handle(compilation) { 
         var output = this.assetsExtractor.extractAssets(compilation.assets);
         console.log('Extracted theme color css content length: ' + output.length);
 
         //Add to assets for output
         var outputName = getFileName(this.options.fileName, output)
-        compilation.assets[outputName] = {
-            source: () => output,
-            size: () => output.length
-        };
+
+        // Add Webpack5 Support
+        if (webpack.version[0] === '5') {
+            compilation.emitAsset(
+                outputName,
+                new webpack.sources.RawSource(output)
+            );
+        } else {
+            compilation.assets[outputName] = {
+                source: () => output,
+                size: () => output.length
+            };
+        }
 
         var injectToHtmlReg = this.options.injectToHtml;
         if (injectToHtmlReg) {
@@ -52,14 +62,23 @@ module.exports = class Handler {
             var source = compilation.assets[name];
             var configJs = this.getConfigJs(outputName, cssCode)
             var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
-            delete compilation.assets[name];
-            compilation.assets[name] = {
-                source: () => content,
-                name,
-                size: () => {
-                    return Buffer.byteLength(content, 'utf8');
-                },
-            };
+
+            // Add Webpack5 Support
+            if (webpack.version[0] === '5') {
+                compilation.emitAsset(
+                  name,
+                  new webpack.sources.RawSource(content)
+                );
+            } else {
+                delete compilation.assets[name];
+                compilation.assets[name] = {
+                    source: () => content,
+                    name,
+                    size: () => {
+                      return Buffer.byteLength(content, 'utf8');
+                    },
+                };
+            }
         });
     }
 
@@ -105,5 +124,3 @@ module.exports = class Handler {
         return new ConcatSource(assetSource, configJs)
     }
 }
-
-
