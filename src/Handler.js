@@ -25,7 +25,7 @@ module.exports = class Handler {
         var outputName = getFileName(this.options.fileName, output)
 
         // Add Webpack5 Support
-        if (webpack.version[0] === '5') {
+        if (webpack.version[0] >= '5') {
             compilation.emitAsset(
                 outputName,
                 new webpack.sources.RawSource(output)
@@ -64,7 +64,7 @@ module.exports = class Handler {
             var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
 
             // Add Webpack5 Support
-            if (webpack.version[0] === '5') {
+            if (webpack.version[0] >= '5') {
                 compilation.emitAsset(
                   name,
                   new webpack.sources.RawSource(content)
