@@ -25,7 +25,7 @@ class ThemeColorReplacer {
             WP_THEME_CONFIG: JSON.stringify(this.handler.options.configVar)
         }).apply(compiler)
         
-        if (webpack.version[0] === '5') {
+        if (webpack.version[0] >= '5') {
               // Add Webpack5 Support
               compiler.hooks.thisCompilation.tap('ThemeColorReplacer', (compilation) => {
                   compilation.hooks.processAssets.tapAsync(
