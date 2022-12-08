@@ -8,8 +8,13 @@ var config = {
     entry: {
         'index': path.resolve(__dirname, '../client/index.js'),
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            WP_THEME_CONFIG: JSON.stringify('_themeCfg')
+        })
+    ],
     output: {
-        library:'tcrClient',
+        library: 'tcrClient',
         libraryTarget: 'var',
         path: path.resolve(__dirname, '../client'),
         filename: 'client.browser.js',
