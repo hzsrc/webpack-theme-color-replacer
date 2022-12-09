@@ -167,3 +167,4 @@ Add `injectToHtml` option.
 
 ### 1.4.3
 * Add `client/client.browser.js` for browser using like `<script src="client.browser.js"></script>`, with a global var `tcrClient`.
+* Add two colors to `getElementUISeries`
