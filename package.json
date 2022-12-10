@@ -3,6 +3,7 @@
   "version": "1.4.3",
   "description": "A webpack plugin designed to dynamicly change the theme colors at runtime. 实现运行时快速动态替换主题色的webpack插件. ",
   "main": "src/index.js",
+  "module": "client/index.js",
   "scripts": {
     "test": "node test/nodejs/index.js && npm run webpack",
     "webpack": "node test/webpack/webpack.js",
