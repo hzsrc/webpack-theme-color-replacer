@@ -1,5 +1,5 @@
 var varyColor = require('../client/varyColor')
-module.exports = function (colorStr) {
+module.exports = function (colorStr, arrOtherColors) {
     if (colorStr[0] === '#') colorStr = colorStr.slice(1)
     var colors = ['#' + colorStr, varyColor.toNum3(colorStr).join(',')]
     for (var i = 1; i <= 9; i++) {
@@ -10,6 +10,6 @@ module.exports = function (colorStr) {
     colors.push(varyColor.lighten(colorStr, 0.95));
     colors.push(varyColor.lighten(colorStr, 0.975));
     colors.push(varyColor.rrggbbToHsl(colorStr));
-
+    [].push.apply(colors, arrOtherColors)
     return colors
 }

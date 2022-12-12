@@ -7,8 +7,6 @@ module.exports = {
     varyColor: varyColor,
     changeSelector: changeSelector,
     getMyColors: function (primaryColor, arrOtherColors) {
-        var colors = getElementUISeries(primaryColor);
-        [].push.apply(colors, arrOtherColors)
-        return colors
+        return  getElementUISeries(primaryColor, arrOtherColors);
     }
 }
