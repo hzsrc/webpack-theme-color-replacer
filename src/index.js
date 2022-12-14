@@ -24,10 +24,26 @@ class ThemeColorReplacer {
         new webpack.DefinePlugin({
             WP_THEME_CONFIG: JSON.stringify(this.handler.options.configVar)
         }).apply(compiler)
-        this.getBinder(compiler, 'emit')((compilation, callback) => {
-            this.handler.handle(compilation)
-            callback()
-        });
+        
+        if (webpack.version[0] >= '5') {
+              // Add Webpack5 Support
+              compiler.hooks.thisCompilation.tap('ThemeColorReplacer', (compilation) => {
+                  compilation.hooks.processAssets.tapAsync(
+                      {
+                        name: 'ThemeColorReplacer',
+                        stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
+                      },
+                      (compilationAssets, callback) => {        
+                        this.handler.handle(compilation)
+                        callback()
+                      });
+              });
+        } else {
+              this.getBinder(compiler, 'emit')((compilation, callback) => {
+                  this.handler.handle(compilation)
+                  callback()
+              });
+        }
     }
 }
 
