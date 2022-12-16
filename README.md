@@ -10,7 +10,7 @@ https://segmentfault.com/a/1190000016061608
 # Install
 npm i -D webpack-theme-color-replacer
 
-# Cofig for webpack
+# Config for webpack
 
 ````js
 
