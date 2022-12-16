@@ -31,6 +31,14 @@ module.exports = function extractCss(src) {
                 if (p > -1) {
                     selector = selector.slice(p + 1)
                 }
+                // 改变选择器
+                if (options.changeSelector) {
+                    var util = {
+                        rules: rules,
+                        changeEach: changeEach
+                    }
+                    selector = options.changeSelector(selector.split(',').sort().join(','), util) || selector
+                }
                 ret.push({ selector, rules: rules })
             }
         } else {
