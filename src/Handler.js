@@ -3,7 +3,9 @@ var webpack = require('webpack')
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
 var LineReg = /\n/g
-
+if (!webpack.sources) {
+    webpack.sources = require('webpack-sources') // for webpack 4
+}
 module.exports = class Handler {
     constructor(options) {
         // Default options

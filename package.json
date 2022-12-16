@@ -11,15 +11,14 @@
     "build-client": "node test/build-client.js",
     "prepublish": "npm run build-client && npm test"
   },
-  "dependencies": {
-    "webpack-sources": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "css-loader": "^3.6.0",
     "glob": "^7.1.3",
     "rimraf": "^2.6.3",
+    "mkdirp": "^0.5.1",
     "webpack": "4.*",
-    "mkdirp": "^0.5.1"
+    "webpack-sources": "*"
   },
   "keywords": [
     "webpack",
