@@ -20,12 +20,13 @@ module.exports = class Handler {
     }
 
     // Add Webpack5 Support
-    emitSource(compilation, name, source, isUpdate) {
-        if (compilation.deleteAsset) { // webpack.version[0] >= '5'
-            if (isUpdate) compilation.deleteAsset(name)
-            compilation.emitAsset(name, source);
+    emitSource(compilation, name, source) {
+        var exists = compilation.assets[name]
+        if (compilation.updateAsset) { // webpack.version[0] >= '5'
+            if (exists) compilation.updateAsset(name, source)
+            else compilation.emitAsset(name, source);
         } else {
-            if (isUpdate) delete compilation[name]
+            if (exists) delete compilation.assets[name]
             compilation.assets[name] = source;
         }
     }
@@ -37,7 +38,7 @@ module.exports = class Handler {
         //Add to assets for output
         var outputName = getFileName(this.options.fileName, output)
 
-        this.emitSource(compilation, outputName, new wpSources.RawSource(output), false)
+        this.emitSource(compilation, outputName, new wpSources.RawSource(output))
 
         var injectToHtmlReg = this.options.injectToHtml;
         if (injectToHtmlReg) {
@@ -64,7 +65,7 @@ module.exports = class Handler {
             var source = compilation.assets[name];
             var configJs = this.getConfigJs(outputName, cssCode)
             var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
-            this.emitSource(compilation, name, new wpSources.RawSource(content), true)
+            this.emitSource(compilation, name, new wpSources.RawSource(content))
         });
     }
 
@@ -89,7 +90,7 @@ module.exports = class Handler {
                     if (assetSource && !assetSource._isThemeJsInjected) {
                         var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
-                        this.emitSource(compilation, assetName, cSrc, true)
+                        this.emitSource(compilation, assetName, cSrc)
                         break;
                     }
                 }
