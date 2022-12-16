@@ -3,8 +3,9 @@ var webpack = require('webpack')
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
 var LineReg = /\n/g
-if (!webpack.sources) {
-    webpack.sources = require('webpack-sources') // for webpack 4
+var wpSources = webpack.sources
+if (!wpSources) {
+    wpSources = require('webpack-sources') // for webpack 4
 }
 module.exports = class Handler {
     constructor(options) {
@@ -36,7 +37,7 @@ module.exports = class Handler {
         //Add to assets for output
         var outputName = getFileName(this.options.fileName, output)
 
-        this.emitSource(compilation, outputName, new webpack.sources.RawSource(output), false)
+        this.emitSource(compilation, outputName, new wpSources.RawSource(output), false)
 
         var injectToHtmlReg = this.options.injectToHtml;
         if (injectToHtmlReg) {
@@ -63,7 +64,7 @@ module.exports = class Handler {
             var source = compilation.assets[name];
             var configJs = this.getConfigJs(outputName, cssCode)
             var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
-            this.emitSource(compilation, name, new webpack.sources.RawSource(content), true)
+            this.emitSource(compilation, name, new wpSources.RawSource(content), true)
         });
     }
 
@@ -105,9 +106,8 @@ module.exports = class Handler {
     }
 
     getEntryJs(outputName, assetSource, cssCode) {
-        var ws = webpack.sources
-        var ConcatSource = ws.ConcatSource
-        var CachedSource = ws.CachedSource
+        var ConcatSource = wpSources.ConcatSource
+        var CachedSource = wpSources.CachedSource
         var configJs = this.getConfigJs(outputName, cssCode)
         if (assetSource instanceof CachedSource) { // CachedSource没有node方法，会报错
             return new CachedSource(concatSrc(assetSource._source || assetSource.source(), configJs))
