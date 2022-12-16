@@ -7,7 +7,8 @@ var SubCssReg = /\s*>\s*/g // div > a 替换为 div>a
 var DataUrlReg = /url\s*\([\\'"\s]*data:/ //url("data:image/svg+xml;base64,PHN2")
 var QuotReg = /\\+(['"])/g
 //var ExclueCssReg = /(?:scale3d|translate3d|rotate3d|matrix3d)\s*\(/i;
-module.exports = function extractCss(src) {
+module.exports = function extractCss(src, options) {
+    if (!options) options = {}
     src = src.replace(Reg_Lf_Rem, '')
     var ret = []
     var nameStart, nameEnd, cssEnd = -1;
@@ -18,7 +19,7 @@ module.exports = function extractCss(src) {
         if (cssEnd > -1 && cssEnd > nameEnd && nameEnd > nameStart) {
             var cssCode = src.slice(nameEnd + 1, cssEnd)
             if (cssCode.indexOf('{') > -1) { // @keyframes
-                var rules = extractCss(cssCode)
+                var rules = extractCss(cssCode, options)
             } else {
                 rules = getRules(cssCode)
             }

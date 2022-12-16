@@ -6,7 +6,7 @@ module.exports = function Extractor(options) {
 
     this.extractColors = function (src) {
         var it = this
-        return extractorCss(src).map(function (css) {
+        return extractorCss(src, options).map(function (css) {
             var rules = css.rules.filter(it.testCssCode);
             if(!rules.length) return ''
             return css.selector + '{' + rules.join(';') + '}'

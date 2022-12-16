@@ -2,7 +2,6 @@
 var webpack = require('webpack')
 var AssetsExtractor = require('./AssetsExtractor')
 var replaceFileName = require('./replaceFileName')
-var { ConcatSource } = require('webpack-sources');
 var LineReg = /\n/g
 
 module.exports = class Handler {
@@ -16,26 +15,26 @@ module.exports = class Handler {
         }, options);
         this.assetsExtractor = new AssetsExtractor(this.options)
     }
-    
-    handle(compilation) { 
+
+    // Add Webpack5 Support
+    emitSource(compilation, name, source, isUpdate) {
+        if (compilation.deleteAsset) { // webpack.version[0] >= '5'
+            if (isUpdate) compilation.deleteAsset(name)
+            compilation.emitAsset(name, source);
+        } else {
+            if (isUpdate) delete compilation[name]
+            compilation.assets[name] = source;
+        }
+    }
+
+    handle(compilation) {
         var output = this.assetsExtractor.extractAssets(compilation.assets);
         console.log('Extracted theme color css content length: ' + output.length);
 
         //Add to assets for output
         var outputName = getFileName(this.options.fileName, output)
 
-        // Add Webpack5 Support
-        if (webpack.version[0] >= '5') {
-            compilation.emitAsset(
-                outputName,
-                new webpack.sources.RawSource(output)
-            );
-        } else {
-            compilation.assets[outputName] = {
-                source: () => output,
-                size: () => output.length
-            };
-        }
+        this.emitSource(compilation, outputName, new webpack.sources.RawSource(output), false)
 
         var injectToHtmlReg = this.options.injectToHtml;
         if (injectToHtmlReg) {
@@ -62,23 +61,7 @@ module.exports = class Handler {
             var source = compilation.assets[name];
             var configJs = this.getConfigJs(outputName, cssCode)
             var content = source.source().replace(/(\<|\\x3C)script/i, m => '<script>' + configJs + '</script>\n' + m);
-
-            // Add Webpack5 Support
-            if (webpack.version[0] >= '5') {
-                compilation.emitAsset(
-                  name,
-                  new webpack.sources.RawSource(content)
-                );
-            } else {
-                delete compilation.assets[name];
-                compilation.assets[name] = {
-                    source: () => content,
-                    name,
-                    size: () => {
-                      return Buffer.byteLength(content, 'utf8');
-                    },
-                };
-            }
+            this.emitSource(compilation, name, new webpack.sources.RawSource(content), true)
         });
     }
 
@@ -103,7 +86,7 @@ module.exports = class Handler {
                     if (assetSource && !assetSource._isThemeJsInjected) {
                         var cSrc = this.getEntryJs(outputName, assetSource, cssCode)
                         cSrc._isThemeJsInjected = true
-                        compilation.assets[assetName] = cSrc
+                        this.emitSource(compilation, assetName, cSrc, true)
                         break;
                     }
                 }
@@ -120,7 +103,22 @@ module.exports = class Handler {
     }
 
     getEntryJs(outputName, assetSource, cssCode) {
+        var ws = webpack.sources
+        var ConcatSource = ws.ConcatSource
+        var CachedSource = ws.CachedSource
         var configJs = this.getConfigJs(outputName, cssCode)
-        return new ConcatSource(assetSource, configJs)
+        if (assetSource instanceof CachedSource) { // CachedSource没有node方法，会报错
+            return new CachedSource(concatSrc(assetSource._source || assetSource.source(), configJs))
+        }
+        return concatSrc(assetSource, configJs)
+
+        function concatSrc(assetSource, configJs) {
+            if (assetSource instanceof ConcatSource) {
+                assetSource.add(configJs)
+                return assetSource
+            } else {
+                return new ConcatSource(assetSource, configJs)
+            }
+        }
     }
 }
