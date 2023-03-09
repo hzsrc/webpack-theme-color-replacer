@@ -111,7 +111,7 @@ module.exports = class Handler {
         var CachedSource = wpSources.CachedSource
         var configJs = this.getConfigJs(outputName, cssCode)
         if (assetSource instanceof CachedSource) { // CachedSource没有node方法，会报错
-            return new CachedSource(concatSrc(assetSource._source || assetSource.source(), configJs))
+            return new CachedSource(concatSrc(((typeof assetSource._source === 'function') ? assetSource._source() : assetSource._source) || assetSource.source(), configJs))
         }
         return concatSrc(assetSource, configJs)
 
