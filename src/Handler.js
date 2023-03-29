@@ -14,7 +14,9 @@ module.exports = class Handler {
             fileName: 'css/theme-colors-[contenthash:8].css',
             matchColors: [],
             isJsUgly: !(process.env.NODE_ENV === 'development' || process.argv.find(arg => arg.match(/\bdev/))),
-            configVar: 'tc_cfg_' + Math.random().toString().slice(2),
+            // 开发环境，由于webpack有代码编译缓存，会导致configVar不匹配先前编译缓存的代码，而出现win()[WP_THEME_CONFIG]为空。故开发环境固定使用tc_cfg_dev。
+            // 如需要多个插件并存可显式传入options.configVer
+            configVar: process.env.NODE_ENV === 'development' ? 'tc_cfg_dev' : ('tc_cfg_' + Math.random().toString().slice(2)),
         }, options);
         this.assetsExtractor = new AssetsExtractor(this.options)
     }
