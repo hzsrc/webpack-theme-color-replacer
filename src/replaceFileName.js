@@ -14,6 +14,6 @@ module.exports = function replaceFileName(outFile, code) {
 }
 
 function getHash(str) {
-    var md = crypto.createHash('md4');
+    var md = crypto.createHash('md5');
     return md.update(str).digest('hex');
 }

@@ -44,7 +44,7 @@ module.exports = {
                     return selector;
             }
         },
-        externalCssFiles: require('path').join(__dirname, './external.css'),
+        externalCssFiles: __dirname + '/external.css',
         newColors: [...getElementUISeries('#bd3be7'), '#333', '#333334', '#6ED'],
         configVar: 'my_var_12322'
     },
