@@ -18,7 +18,7 @@ module.exports = function extractCss(src, options) {
         cssEnd = findCssEnd(src, nameEnd)
         if (cssEnd > -1 && cssEnd > nameEnd && nameEnd > nameStart) {
             var cssCode = src.slice(nameEnd + 1, cssEnd)
-            if (cssCode.indexOf('{') > -1) { // @keyframes
+            if (cssCode.replace(/\$\{/g, '').indexOf('{') > -1) { // @keyframes
                 var rules = extractCss(cssCode, options)
             } else {
                 rules = getRules(cssCode)

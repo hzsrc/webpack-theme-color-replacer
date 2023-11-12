@@ -10,8 +10,13 @@ var Extractor = require('./Extractor')
 //css-loader 2@srcmap:   // Module\nexports.push([module.i, "a{   .....   }\n", "",{"version":3
 //css-loader@srcmap.less // Module\nexports.push([module.i, "a{ .....   ;\n  }\n}\n\n\n/*# sourceMappingURL=antd.css.map*/", "",{"version":3,"
 //css-loader 5.1:      ___CSS_LOADER_EXPORT___.push([module.id, "a {\n ... \n  }\n}\n"],"sourceRoot":""}]);
+/*css-loader 6.8:      ___CSS_LOADER_EXPORT___.push([module.id, `.c222 {
+    border: 1px #ADF solid;;
+}
+`, ""]);*/
+//css-loader 6.8 debug:       // Module\n___CSS_LOADER_EXPORT___.push([module.id, `.test-class {... }\n`, \"\"]);\n
 
-var Css_Loader_Reg_DEV = /\bn?(?:exports|___CSS_LOADER_EXPORT___)\.push\(\[module\.id?, \\?"(.+?\})(?:\\?\\n)?(?:[\\n]*\/\*#\s*sourceMappingURL=.+?\*\/)?\\?", \\?"\\?"(?:\]\)|,\s*\{)/g;
+var Css_Loader_Reg_DEV = /\bn?(?:exports|___CSS_LOADER_EXPORT___)\.push\(\[module\.id?, \\?["`]([\s\S]+?\})(?:\\?\\n)?(?:[\\n]*\/\*#\s*sourceMappingURL=.+?\*\/)?\s*\\?["`], \\?"\\?"(?:\]\)|,\s*\{)/g;
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]\)|,\{)/g;
@@ -65,7 +70,7 @@ module.exports = function AssetsExtractor(options) {
             return cssSrcs
         }
     }
-    this.extractAsset = function (fn, asset) {
+    this.extractAsset = function (fn, asset) {debugger
         if (fn.match(CssExtReg)) {
             var src = assetToStr(asset);
             writeFileForDebugIf(fn, src, this.extractor)
