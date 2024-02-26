@@ -16,7 +16,7 @@ var Extractor = require('./Extractor')
 `, ""]);*/
 //css-loader 6.8 debug:       // Module\n___CSS_LOADER_EXPORT___.push([module.id, `.test-class {... }\n`, \"\"]);\n
 
-var Css_Loader_Reg_DEV = /\bn?(?:exports|___CSS_LOADER_EXPORT___)\.push\(\[module\.id?, \\?["`]([\s\S]+?\})(?:\\?\\n)?(?:[\\n]*\/\*#\s*sourceMappingURL=.+?\*\/)?\s*\\?["`], \\?"\\?"(?:\]\)|,\s*\{)/g;
+var Css_Loader_Reg_DEV = /\bn?(?:exports|___CSS_LOADER_EXPORT___)\.push\(\[module\.id?, \\*["`]([\s\S]+?\})(?:\\*\\n)?(?:[\\n]*\/\*#\s*sourceMappingURL=.+?\*\/)?\s*\\*["`], \\*"\\*"(?:\]\)|,\s*\{)/g;
 
 //css-loader:  n.exports=t("FZ+f")(!1)).push([n.i,"\n.payment-type[data-v-ffb10066] {......}\n",""])
 var Css_Loader_Reg_UGLY = /\.push\(\[\w+\.i,['"](.+?\})[\\rn]*['"],['"]['"](?:\]\)|,\{)/g;
