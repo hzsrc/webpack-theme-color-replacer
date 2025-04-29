@@ -8,9 +8,6 @@ module.exports = function changeSelector(selector, util) {
             return util.changeEach(selector, ':not(.el-button--primary)')
         case '.el-button.is-plain:active':
         case '.el-button.is-plain:focus,.el-button.is-plain:hover':
-            return util.changeEach(selector, '.el-button--default')
-        case '.el-button.is-plain:focus.el-button--default,.el-button.is-plain:hover.el-button--default':
-        case '.el-button.is-plain:active.el-button--default':
             return util.changeEach(selector, ':not(.is-disabled)')
         case '.el-pagination button:hover':
             return selector + ':not(:disabled)'
