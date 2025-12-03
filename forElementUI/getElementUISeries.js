@@ -6,6 +6,7 @@ module.exports = function (colorStr, arrOtherColors) {
         colors.push(varyColor.lighten(colorStr, Number((i / 10).toFixed(2))));
         colors.push(varyColor.darken(colorStr, Number((i / 10).toFixed(2))));
     }
+    colors.push(varyColor.lighten(colorStr, 0.85));
     colors.push(varyColor.lighten(colorStr, 0.925));
     colors.push(varyColor.lighten(colorStr, 0.95));
     colors.push(varyColor.lighten(colorStr, 0.975));
