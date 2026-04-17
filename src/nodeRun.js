@@ -3,7 +3,6 @@ var replaceFileName = require('./replaceFileName')
 var path = require('path')
 var fs = require('fs')
 var glob = require('glob')
-var mkdirp = require('mkdirp')
 
 /*
 // use in Nodejs:
@@ -19,7 +18,7 @@ module.exports = function run(options) {
     var code = new AssetsExtractor(options).extractAssets(mockAssets)
 
     var outFile = replaceFileName(options.fileName, code);
-    mkdirp.sync(path.dirname(outFile))
+    fs.mkdirSync(path.dirname(outFile), { recursive: true })
     fs.writeFileSync(outFile, code)
     return { code, outFile }
 }
