@@ -52,7 +52,7 @@ module.exports = {
 - **dev**：通过 `transformIndexHtml` 注入到 html；`url` 为 `/h5/css/theme-colors.css`。
 - **build**：默认把配置前置注入到入口 chunk；设置 `injectToHtml: true` 时改为注入 html，`url` 为 `/h5/css/theme-colors.<hash>.css`。
 
-> 说明：dev 下 Vite 会跳过用户 `define` 的源码替换，因此插件改为在 html 里注入全局变量 `window.WP_THEME_CONFIG`，保证 `client` 里的 `win()[WP_THEME_CONFIG]` 在运行时能正确解析；build 下仍使用 `define` 进行替换。
+> 说明：`WP_THEME_CONFIG` 只是 `define`（等价 webpack 的 `DefinePlugin`）的**编译期令牌**：编译时它会被替换成 `configVar` 的字符串字面量，`client` 里的 `win()[WP_THEME_CONFIG]` 因此变成 `window[configVar]`。所以插件注入的始终是运行时配置对象 `window[configVar] = { url, colors, cssCode? }`，**不会**写 `window.WP_THEME_CONFIG`。dev 下由 Vite 的 `define` 让 `win()[WP_THEME_CONFIG]` 能解析（Vite 6 起 client 端不再静态替换，改由 `/@vite/env` 把 `define` 写成全局变量）；build 下 `define` 为静态替换。
 
 ## 运行时换色
 

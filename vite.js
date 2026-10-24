@@ -202,8 +202,16 @@ module.exports = function viteThemeColorReplacer(options) {
         console.log('Extracted theme color css content length: ' + output.length);
     }
 
+    function winExpr() {
+        return '(typeof window===\'undefined\'?global:window)';
+    }
+
+    // 运行时配置必须挂到 window[configVar] 上。
+    // client 里读取的是 win()[WP_THEME_CONFIG]：WP_THEME_CONFIG 只是 define（等价 webpack DefinePlugin）
+    // 在编译期替换成 configVar 字符串字面量的令牌，运行时并不存在名为 WP_THEME_CONFIG 的配置对象。
+    // 因此这里用 [<configVar 字面量>] 取值，而不是拼接 window.<name>（configVar 含 . / - 等字符时也不会出错）。
     function buildConfigJs(cfg) {
-        return '(typeof window===\'undefined\'?global:window).' + configVar + '=' + JSON.stringify(cfg) + ';';
+        return winExpr() + '[' + JSON.stringify(configVar) + ']=' + JSON.stringify(cfg) + ';';
     }
 
     function injectScriptTag(html, js) {
@@ -222,7 +230,9 @@ module.exports = function viteThemeColorReplacer(options) {
             if (!configVar) {
                 configVar = isDev ? 'tc_cfg_dev' : ('tc_cfg_' + Math.random().toString().slice(2));
             }
-            // build 下等价于 webpack DefinePlugin；dev 下由 transformIndexHtml 注入全局变量代替
+            // WP_THEME_CONFIG 等价于 webpack DefinePlugin 的令牌，编译期被替换成 configVar 字面量：
+            // build 下为静态替换；dev 下由 Vite 提供（Vite 4/5 静态替换，Vite 6 起 client 端改由
+            // /@vite/env 把 define 写入 globalThis），两种方式都能让 client 的 win()[WP_THEME_CONFIG] 解析成功。
             return {
                 define: {
                     WP_THEME_CONFIG: JSON.stringify(configVar),
@@ -279,10 +289,10 @@ module.exports = function viteThemeColorReplacer(options) {
 
         transformIndexHtml(html) {
             if (isDev) {
-                // dev：把 WP_THEME_CONFIG 作为全局变量注入，供 client 的 win()[WP_THEME_CONFIG] 解析
+                // dev：WP_THEME_CONFIG 由 define 提供，这里只注入运行时配置对象 window[configVar]，
+                // 供 client 的 win()[WP_THEME_CONFIG] 解析；不再写 window.WP_THEME_CONFIG（它只是编译期令牌）。
                 var cfg = { url: '/' + (devFileName || devFileNameFor()), colors: opts.matchColors };
-                var js = 'window.WP_THEME_CONFIG=' + JSON.stringify(configVar) + ';' + buildConfigJs(cfg);
-                return injectScriptTag(html, js);
+                return injectScriptTag(html, buildConfigJs(cfg));
             }
             if (!opts.injectToHtml || !buildOutFile) return html;
             var bcfg = { url: '/' + buildOutFile, colors: opts.matchColors };

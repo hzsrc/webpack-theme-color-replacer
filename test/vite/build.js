@@ -65,6 +65,9 @@ async function buildTest() {
     if (jsText.indexOf('h5/css/theme-colors.') === -1) return fail('entry js should contain theme-colors url')
     // build 下 define 会把 WP_THEME_CONFIG 替换成字符串字面量
     if (jsText.indexOf(JSON.stringify(options.configVar)) === -1) return fail('define should replace WP_THEME_CONFIG in build js')
+    // 入口 chunk 注入的是 window[configVar] = { url, colors }，而不是 window.WP_THEME_CONFIG
+    if (jsText.indexOf('.WP_THEME_CONFIG') !== -1) return fail('xx.WP_THEME_CONFIG should be xx[WP_THEME_CONFIG]')
+    if (jsText.indexOf('[' + JSON.stringify(options.configVar) + ']=') === -1) return fail('entry js should inject window[' + JSON.stringify(options.configVar) + '] config')
 
     // 4. 换色测试
     var replaced = themeColorChanger.replaceCssText(cssText, options.matchColors, options.newColors)
@@ -90,14 +93,17 @@ async function devTest() {
         // SFC <style> 子模块（形如 .vue?vue&type=style&index=0&lang.css）也应被识别并累积提取
         await server.transformRequest('/d.css?vue&type=style&index=0&lang.css')
 
-        // dev：Vite 跳过用户 define 的源码替换，改为在 HTML 里注入 window.WP_THEME_CONFIG 全局变量
+        // dev：WP_THEME_CONFIG 只是 define 的编译期令牌，html 里注入的是运行时配置 window[configVar]
         var html = '<!DOCTYPE html><html><head></head><body></body></html>'
         var out = await server.transformIndexHtml('/index.html', html)
-        if (out.indexOf('window.WP_THEME_CONFIG=' + JSON.stringify(options.configVar)) === -1) {
-            return fail('dev html should inject window.WP_THEME_CONFIG, got:\n' + out)
+        if (out.indexOf('window.WP_THEME_CONFIG') !== -1) {
+            return fail('dev html should NOT assign window.WP_THEME_CONFIG (it is only a define token), got:\n' + out)
         }
-        if (out.indexOf(options.configVar + '=') === -1) {
-            return fail('dev html should inject window.' + options.configVar + ', got:\n' + out)
+        if (out.indexOf('[' + JSON.stringify(options.configVar) + ']=') === -1) {
+            return fail('dev html should inject window[' + JSON.stringify(options.configVar) + '], got:\n' + out)
+        }
+        if (out.indexOf('/h5/css/theme-colors.css') === -1) {
+            return fail('dev html should inject dev css url, got:\n' + out)
         }
 
         // 等待防抖后的 regenerate 写文件
