@@ -7,7 +7,7 @@ module.exports = {
         var Promise = promiseForIE || win().Promise
         var _this = this;
         if (!theme_COLOR_config) {
-            theme_COLOR_config = win()[win().WP_THEME_CONFIG]
+            theme_COLOR_config = win()[WP_THEME_CONFIG]
             var later = retry()
             //重试直到theme_COLOR_config加载
             if (later) return later

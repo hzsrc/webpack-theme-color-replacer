@@ -1,6 +1,6 @@
 {
   "name": "webpack-theme-color-replacer",
-  "version": "1.5.10",
+  "version": "1.5.11",
   "description": "A webpack/vite plugin designed to dynamicly change the theme colors at runtime. 实现运行时快速动态替换主题色的webpack/vite插件. ",
   "main": "src/index.js",
   "module": "client/index.js",
